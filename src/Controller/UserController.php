@@ -71,9 +71,10 @@ class UserController extends AbstractController
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger,  EntityManagerInterface $entityManager): Response
     {
-        // Création du formulaire
-        $form = $this->createForm(UserType::class, $user);
-
+        // // Création du formulaire
+        // $form = $this->createForm(UserType::class, $user);
+        // Modification d'un utilisateur
+        $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
 
         // Validation et traitement du formulaire
