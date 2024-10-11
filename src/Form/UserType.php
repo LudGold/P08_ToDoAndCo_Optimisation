@@ -34,17 +34,21 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'attr' => ['class' => 'form-control']
-            ])
-            ->add('roles', ChoiceType::class, [
+            ]);
+        
+        if ($options['is_edit']) {
+            $builder->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Administrateur' => 'ROLE_ADMIN'
                 ],
-                'multiple' => true, // Permet de sélectionner plusieurs rôles
-                'expanded' => true, // Affiche sous forme de cases à cocher
+                'multiple' => true,
+                'expanded' => true,
                 'label' => 'Rôles',
-                'attr' => ['class' => 'form-check'] 
+                'disabled' => in_array('ROLE_USER', $options['data']->getRoles()), // Grisé si ROLE_USER
+                'attr' => ['class' => 'form-check'],
             ]);
+        }
     }
     /**
      * Ajoute le bouton de soumission au formulaire.
@@ -61,6 +65,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_edit' => false,
         ]);
     }
 }
