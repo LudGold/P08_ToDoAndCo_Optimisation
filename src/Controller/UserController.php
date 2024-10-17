@@ -41,7 +41,8 @@ class UserController extends AbstractController
 
         // Validation du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // Ajoute ROLE_USER par défaut à chaque création d'utilisateur
+            $user->setRoles(array_unique(array_merge($user->getRoles(), ['ROLE_USER'])));
 
             // Encodage du mot de passe
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());

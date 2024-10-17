@@ -4,9 +4,9 @@
 {% endblock %}
 
 {% block body %}
-	{# //doublon 
-    <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>  #}
-	<div class="row">
+	 {# doublon  #}
+    {# <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>   #}
+	<div class="container-fluid">
 		{% for task in tasks %}
 			<div class="col-sm-4 col-lg-4 col-md-4">
 				<div class="thumbnail">
@@ -24,7 +24,7 @@
 						<p>{{ task.content }}</p>
 					</div>
 					<div>
-						<form action="{{ path('task_toggle', {'id' : task.id }) }}">
+						<form method="post" action="{{ path('task_toggle', {'id' : task.id }) }}">
 							<button class="btn btn-success btn-sm pull-right">
 								{% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée
 								{% endif %}

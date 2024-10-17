@@ -25,7 +25,9 @@ class TaskController extends AbstractController
      */
     public function listAction(): Response
     {
-        $tasks = $this->entityManager->getRepository(Task::class)->findAll();
+        // Récupère l'utilisateur actuellement connecté
+        $user = $this->getUser();
+        $tasks = $this->entityManager->getRepository(Task::class)->findBy(['author' => $user]);
 
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
@@ -36,7 +38,11 @@ class TaskController extends AbstractController
     public function createAction(Request $request, Security $security): Response
     {
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+        $task->setAuthor($user);
+
+        $form = $this->createForm(TaskType::class, $task, ['is_edit' => false]);
 
         $form->handleRequest($request);
 
@@ -46,7 +52,7 @@ class TaskController extends AbstractController
             }
             $user = $security->getUser();
             $task->setAuthor($user);
-            
+
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
@@ -63,7 +69,7 @@ class TaskController extends AbstractController
      */
     public function editAction(Task $task, Request $request): Response
     {
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, ['is_edit' => true]);
 
         $form->handleRequest($request);
 
@@ -89,7 +95,13 @@ class TaskController extends AbstractController
         $task->toggle(!$task->isDone());
         $this->entityManager->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        // Vérification de l'état pour afficher le message approprié
+        if ($task->isDone()) {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        } else {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+        }
+
 
         return $this->redirectToRoute('task_list');
     }
@@ -100,7 +112,7 @@ class TaskController extends AbstractController
     public function deleteTaskAction(Task $task, Request $request): Response
     {
         // Vérification du token CSRF
-        if (!$this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             return $this->redirectToRoute('task_list');
         }
 
@@ -110,5 +122,37 @@ class TaskController extends AbstractController
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
         return $this->redirectToRoute('task_list');
+    }
+    /**
+     * @Route("/tasks/todo", name="task_list_todo", methods={"GET"})
+     */
+    public function listTodoAction(): Response
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $this->getUser();
+
+        // Récupère les tâches non terminées pour l'utilisateur connecté
+        $tasks = $this->entityManager->getRepository(Task::class)->findBy([
+            'author' => $user,
+            'isDone' => false,
+        ]);
+
+        return $this->render('task/list.html.twig', ['tasks' => $tasks, 'title' => 'Tâches à faire']);
+    }
+    /**
+     * @Route("/tasks/done", name="task_list_done", methods={"GET"})
+     */
+    public function listDoneAction(): Response
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $this->getUser();
+
+        // Récupère les tâches terminées pour l'utilisateur connecté
+        $tasks = $this->entityManager->getRepository(Task::class)->findBy([
+            'author' => $user,
+            'isDone' => true,
+        ]);
+
+        return $this->render('task/list.html.twig', ['tasks' => $tasks, 'title' => 'Tâches terminées']);
     }
 }
