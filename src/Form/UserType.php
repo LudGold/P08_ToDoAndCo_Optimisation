@@ -12,9 +12,17 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class UserType extends AbstractType
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->addSubmitButton($builder);
@@ -27,7 +35,7 @@ class UserType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'required' => true,
+                'required' => !$options['is_edit'], // Mot de passe non requis en mode édition
                 'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'form-control']],
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau', 'attr' => ['class' => 'form-control']],
             ])
@@ -45,11 +53,12 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'label' => 'Rôles',
-                'disabled' => in_array('ROLE_USER', $options['data']->getRoles()), // Grisé si ROLE_USER
+                'disabled' => !$this->security->isGranted('ROLE_ADMIN'), // Grisé si l'utilisateur n'est pas admin
                 'attr' => ['class' => 'form-check'],
             ]);
         }
     }
+
     /**
      * Ajoute le bouton de soumission au formulaire.
      *
@@ -58,7 +67,10 @@ class UserType extends AbstractType
     private function addSubmitButton(FormBuilderInterface $builder): void
     {
         $builder
-            ->add('submit', SubmitType::class, ['label' => 'S\'inscrire']);
+            ->add('submit', SubmitType::class, [
+                'label' => 'S\'inscrire',
+                'attr' => ['class' => 'btn btn-primary'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

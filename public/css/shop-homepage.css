@@ -39,7 +39,12 @@ body {
     padding-left: 10px;
     color: #d17581;
 }
-
+input#task_title {
+    width: 100%!important;
+}
+textarea#task_content {
+    width: 100%!important;
+}
 .thumbnail {
     padding: 0;
 }
