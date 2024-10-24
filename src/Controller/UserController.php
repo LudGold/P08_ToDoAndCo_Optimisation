@@ -12,12 +12,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Security;
+
 
 class UserController extends AbstractController
 {
 
     /**
-     * @Route("/users", name="user_list")
+     * @Route("admin/users", name="admin_user_list")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function listAction(UserRepository $userRepository): Response
     {
@@ -35,7 +39,7 @@ class UserController extends AbstractController
     public function createAction(Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['is_edit' => false]);
 
         $form->handleRequest($request);
 
@@ -56,10 +60,10 @@ class UserController extends AbstractController
             $logger->info('Un utilisateur a été créé', ['user_id' => $user->getId()]);
 
             // Message de confirmation
-            $this->addFlash('success', "L'utilisateur a bien été ajouté.");
+            $this->addFlash('success', "Vous avez bien été ajouté.");
 
             // Redirection vers la liste des utilisateurs
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_homepage');
         }
 
         return $this->render('user/create.html.twig', [
@@ -70,17 +74,33 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="app_user_edit")
      */
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger,  EntityManagerInterface $entityManager): Response
+    public function editUser(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
-        // // Création du formulaire
-        // $form = $this->createForm(UserType::class, $user);
-        // Modification d'un utilisateur
-        $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
+        // Si l'utilisateur connecté n'est pas administrateur et essaie de modifier un autre utilisateur
+        if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
+            throw $this->createAccessDeniedException("Vous n'avez pas la permission de modifier cet utilisateur.");
+        }
+        // Si l'utilisateur est un administrateur, il peut modifier les rôles , sinon on bloque certains champs
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        // Vérifie si l'utilisateur connecté modifie son propre profil
+        $isSelfEdit = ($this->getUser() === $user);
+
+        // Si ce n'est pas son propre profil et qu'il n'est pas admin
+        if (!$isAdmin && !$isSelfEdit) {
+            throw $this->createAccessDeniedException("Vous n'avez pas la permission de modifier cet utilisateur.");
+        }
+
+        $form = $this->createForm(UserType::class, $user, [
+            'is_edit' => true,
+            'is_admin' => $isAdmin,
+            'is_self_edit' => $isSelfEdit,
+        ]);
+
+
         $form->handleRequest($request);
 
-        // Validation et traitement du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe si nécessaire
+            // Si l'utilisateur change son mot de passe, on le hash
             if ($user->getPassword()) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
                 $user->setPassword($hashedPassword);
@@ -89,14 +109,15 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Log de la modification de l'utilisateur
-            $logger->info('Un utilisateur a été modifié', ['user_id' => $user->getId()]);
+            // Ajout d'un message flash de confirmation
+            $this->addFlash('success', 'Votre profil a été mis à jour.');
 
-            // Message de confirmation
-            $this->addFlash('success', "L'utilisateur a bien été modifié.");
+            // Redirection en fonction de l'utilisateur ou de l'administrateur
+            if ($isAdmin && !$isSelfEdit) {
+                return $this->redirectToRoute('admin/users'); // Redirection vers la gestion des utilisateurs pour l'admin
+            }
 
-            // Redirection vers la liste des utilisateurs
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('/'); // homepage après validation du profil
         }
 
         return $this->render('user/edit.html.twig', [

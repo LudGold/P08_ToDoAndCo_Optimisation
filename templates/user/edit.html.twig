@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}<h1>Modifier <strong>{{ user.username }}</strong></h1>{% endblock %}
-{% block header_img %}{% endblock %}
+{% block header_title %}
+<h1>Modifier
+	{{ is_granted('ROLE_ADMIN') ? 'l\'utilisateur' : 'mon profil' }} <strong>{{ user.username }}</strong></h1>
+{% endblock %}
 
 {% block body %}
     <div class="row">
-        {{ form_start(form, {'action' : path('app_user_edit', {'id' : user.id})}) }}
+        {{ form_start(form) }}
         {{ form_widget(form) }}
-
-        <button type="submit" class="btn btn-success pull-right">Modifier</button>
         {{ form_end(form) }}
+        
     </div>
 {% endblock %}

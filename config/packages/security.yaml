@@ -42,6 +42,9 @@ security:
             - { path: ^/profile, roles: ROLE_USER }
               # Empêcher l'accès à la création des tâches si l'utilisateur n'est pas connecté
             - { path: ^/tasks/create, roles: ROLE_USER }
+            - { path: ^/users/create, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+           
+              
             
 
 when@test:

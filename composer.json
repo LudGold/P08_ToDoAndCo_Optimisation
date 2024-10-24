@@ -19,8 +19,10 @@
         "symfony/form": "5.4.*",
         "symfony/framework-bundle": "5.4.*",
         "symfony/mailer": "5.4.*",
+        "symfony/messenger": "5.4.*",
         "symfony/runtime": "5.4.*",
         "symfony/security-bundle": "5.4.*",
+        "symfony/security-csrf": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
         "symfony/validator": "5.4.*",
         "symfony/yaml": "5.4.*"
@@ -30,6 +32,8 @@
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.64",
         "symfony/maker-bundle": "^1.43",
+        "symfony/stopwatch": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*",
         "symfony/web-server-bundle": "^4.4 || ^5.4"
     },
     "config": {

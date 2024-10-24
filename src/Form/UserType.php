@@ -25,26 +25,34 @@ class UserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->addSubmitButton($builder);
+        $isUserConnected = $this->security->getUser() !== null;
+        // Si l'utilisateur connecté est admin, désactiver certains champs
+        $isAdmin = $options['is_admin'];
+        // si l'admin édite son propre profil
+        $isSelfEdit = $options['is_self_edit'];
 
         $builder
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'disabled' => !$isSelfEdit && $isAdmin // Désactive le champ si admin
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Adresse email',
+                'attr' => ['class' => 'form-control'],
+                'disabled' => !$isSelfEdit && $isAdmin // Désactive le champ si admin
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'required' => !$options['is_edit'], // Mot de passe non requis en mode édition
+                'required' => !$options['is_edit'], // Pas obligatoire si en édition
+                'disabled' => !$isSelfEdit && $isAdmin, // Désactive le champ si admin
                 'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'form-control']],
-                'second_options' => ['label' => 'Tapez le mot de passe à nouveau', 'attr' => ['class' => 'form-control']],
-            ])
-            ->add('email', EmailType::class, [
-                'label' => 'Adresse email',
-                'attr' => ['class' => 'form-control']
+                'second_options' => ['label' => 'Répéter le mot de passe', 'attr' => ['class' => 'form-control']],
             ]);
-        
-        if ($options['is_edit']) {
+
+        // Si l'utilisateur connecté est admin, il peut modifier le rôle
+        if ($isAdmin && $isSelfEdit) {
             $builder->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
@@ -53,31 +61,24 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'label' => 'Rôles',
-                'disabled' => !$this->security->isGranted('ROLE_ADMIN'), // Grisé si l'utilisateur n'est pas admin
                 'attr' => ['class' => 'form-check'],
             ]);
         }
-    }
+        if ($isUserConnected) {
+            $builder->add('submit', SubmitType::class, [
+                'label' => 'Modifier mon profil',
+                'attr' => ['class' => 'btn btn-success pull-right'],
 
-    /**
-     * Ajoute le bouton de soumission au formulaire.
-     *
-     * @param FormBuilderInterface $builder Le builder du formulaire
-     */
-    private function addSubmitButton(FormBuilderInterface $builder): void
-    {
-        $builder
-            ->add('submit', SubmitType::class, [
-                'label' => 'S\'inscrire',
-                'attr' => ['class' => 'btn btn-primary'],
             ]);
+        }
     }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
             'is_edit' => false,
+            'is_admin' => false, // Pour distinguer création/édition
+            'is_self_edit' => false,
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +28,25 @@ class TaskController extends AbstractController
     {
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
-        $tasks = $this->entityManager->getRepository(Task::class)->findBy(['author' => $user]);
+        // Récupère l'utilisateur "anonyme" pour le rôle admin
+        $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
+
+        // Vérifie si l'utilisateur est administrateur
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        // Si l'utilisateur est admin, récupérer les tâches de l'utilisateur connecté + de l'utilisateur "anonyme"
+        if ($isAdmin) {
+            // Récupérer les tâches soit de l'utilisateur connecté soit de l'utilisateur anonyme
+            $tasks = $this->entityManager->getRepository(Task::class)->createQueryBuilder('t')
+                ->where('t.author = :user OR t.author = :anonymous')
+                ->setParameter('user', $user)
+                ->setParameter('anonymous', $anonymousUser)
+                ->getQuery()
+                ->getResult();
+        } else {
+            // Si l'utilisateur n'est pas admin, ne récupérer que ses propres tâches
+            $tasks = $this->entityManager->getRepository(Task::class)->findBy(['author' => $user]);
+        }
 
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
@@ -69,6 +88,14 @@ class TaskController extends AbstractController
      */
     public function editAction(Task $task, Request $request): Response
     {
+        $user = $this->getUser();
+        if ($task->getAuthor() !== $user) {
+            // Ajouter un message flash
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à modifier cette tâche.');
+
+            // Rediriger vers la liste des tâches de l'utilisateur
+            return $this->redirectToRoute('task_list');
+        }
         $form = $this->createForm(TaskType::class, $task, ['is_edit' => true]);
 
         $form->handleRequest($request);
@@ -107,10 +134,27 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/delete", name="task_delete", methods={"POST"})
+     * @Route("/tasks/{id}/delete", name="task_delete", methods={"GET", "POST"})
      */
     public function deleteTaskAction(Task $task, Request $request): Response
     {
+        $user = $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        if ($task->getAuthor() !== $user) {
+            // Ajouter un message flash
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette tâche.');
+
+            // Rediriger vers la liste des tâches de l'utilisateur
+            return $this->redirectToRoute('task_list');
+        }
+        // Récupérer l'utilisateur "anonyme" pour la comparaison
+        $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
+
+        // Vérification des autorisations de suppression
+        if ($task->getAuthor() !== $user && (!$isAdmin || $task->getAuthor() !== $anonymousUser)) {
+            // Si l'utilisateur n'est pas l'auteur et que ce n'est pas un admin qui supprime une tâche anonyme
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer cette tâche.');
+        }
         // Vérification du token CSRF
         if (!$this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             return $this->redirectToRoute('task_list');
