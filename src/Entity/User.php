@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,11 +47,30 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="author", orphanRemoval=true)
+     */
+    private $tasks;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resetToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenExpiryDate;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
- /**
+    /**
      * Implémentation de UserInterface : retourne le nom d'utilisateur (identifiant).
      */
     public function getUserIdentifier(): string
@@ -95,7 +116,7 @@ class User implements UserInterface
 
     public function getRoles(): ?array
     {
-        $roles=$this->roles;
+        $roles = $this->roles;
         if (empty($roles)) {
             $roles[] = 'ROLE_USER';
         }
@@ -120,5 +141,50 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // Si tu stockes des informations sensibles.
+    }
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setAuthor($this);
+        }
+
+        return $this;
+    }
+     public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getTokenExpiryDate(): ?\DateTimeInterface
+    {
+        return $this->tokenExpiryDate;
+    }
+
+    public function setTokenExpiryDate(?\DateTimeInterface $tokenExpiryDate): self
+    {
+        $this->tokenExpiryDate = $tokenExpiryDate;
+
+        return $this;
+    }
+
+    public function isTokenExpired(): bool
+    {
+        return $this->getTokenExpiryDate() === null || $this->getTokenExpiryDate() < new \DateTime();
     }
 }

@@ -1,0 +1,30 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialisation du mot de passe{% endblock %}
+
+{% block body %}
+    <h1>Réinitialisation du mot de passe</h1>
+
+    {{ form_start(resetForm) }}
+        <div class="form-group">
+            {{ form_label(resetForm.plainPassword) }}
+            {{ form_widget(resetForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(resetForm.plainPassword) }}
+        </div>
+        
+      <button class="btn btn-primary">Réinitialiser mon mot de passe</button>
+    {{ form_end(resetForm) }}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock %}

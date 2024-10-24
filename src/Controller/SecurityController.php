@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+
 class SecurityController extends AbstractController
 {
 
@@ -23,7 +25,7 @@ class SecurityController extends AbstractController
             'error'         => $error,
         ));
     }
-      /**
+    /**
      * @Route("/logout", name="app_logout")
      */
     public function logout(): void
@@ -31,4 +33,6 @@ class SecurityController extends AbstractController
         // Cette méthode ne sera jamais exécutée.
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    
 }

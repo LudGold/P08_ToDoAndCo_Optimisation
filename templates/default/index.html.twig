@@ -11,5 +11,15 @@
 		<a href="{{ path('task_list') }}" class="btn btn-primary">Toutes les tâches</a>
 		<a href="{{ path('task_list_todo') }}" class="btn btn-warning">Tâches à faire</a>
 		<a href="{{ path('task_list_done') }}" class="btn btn-info">Tâches terminées</a>
+		{# Afficher le bouton pour éditer le profil uniquement si l'utilisateur est connecté #}
+        {% if app.user %}
+            <a href="{{ path('app_user_edit', {id: app.user.id}) }}" class="btn btn-secondary mt-3">Modifier mon profil</a>
+        {% endif %}
+		{# Affiche le bouton "Gestion utilisateur" uniquement si l'utilisateur est admin #}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_user_list') }}" class="btn btn-info mt-3">Gestion utilisateur</a>
+        {% endif %}
 	</div>
+	
+
 {% endblock %}
