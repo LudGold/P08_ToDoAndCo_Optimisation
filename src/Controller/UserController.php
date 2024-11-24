@@ -20,11 +20,12 @@ class UserController extends AbstractController
 {
 
     /**
-     * @Route("admin/users", name="admin_user_list")
+     * @Route("/admin/users", name="admin_user_list")
      * @IsGranted("ROLE_ADMIN")
      */
     public function listAction(UserRepository $userRepository): Response
     {
+        
         // Récupérer tous les utilisateurs
         $users = $userRepository->findAll();
 
@@ -114,10 +115,10 @@ class UserController extends AbstractController
 
             // Redirection en fonction de l'utilisateur ou de l'administrateur
             if ($isAdmin && !$isSelfEdit) {
-                return $this->redirectToRoute('admin/users'); // Redirection vers la gestion des utilisateurs pour l'admin
+                return $this->redirectToRoute('admin_user_list'); // Redirection vers la gestion des utilisateurs pour l'admin
             }
 
-            return $this->redirectToRoute('/'); // homepage après validation du profil
+            return $this->redirectToRoute('app_homepage'); // homepage après validation du profil
         }
 
         return $this->render('user/edit.html.twig', [

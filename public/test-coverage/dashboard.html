@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for D:\wamp\www\P08_ToDoAndCo_Optimisation\src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=9.2.32" rel="stylesheet" type="text/css">
+  <link href="_css/nv.d3.min.css?v=9.2.32" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=9.2.32" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">D:\wamp\www\P08_ToDoAndCo_Optimisation\src</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Command/AssignAnonymousUserToTaskCommand.php.html#13">App\Command\AssignAnonymousUserToTaskCommand</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/Dev/AppFixtures.php.html#8">App\DataFixtures\Dev\AppFixtures</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/Dev/TaskFixtures.php.html#11">App\DataFixtures\Dev\TaskFixtures</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#17">App\Repository\UserRepository</a></td><td class="text-right">14%</td></tr>
+       <tr><td><a href="Controller/PasswordResetController.php.html#16">App\Controller\PasswordResetController</a></td><td class="text-right">28%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#19">App\Controller\UserController</a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#15">App\Controller\TaskController</a></td><td class="text-right">63%</td></tr>
+       <tr><td><a href="Repository/TaskRepository.php.html#17">App\Repository\TaskRepository</a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Entity/User.php.html#20">App\Entity\User</a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Controller/SecurityController.php.html#11">App\Controller\SecurityController</a></td><td class="text-right">85%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controller/TaskController.php.html#15">App\Controller\TaskController</a></td><td class="text-right">40</td></tr>
+       <tr><td><a href="Controller/PasswordResetController.php.html#16">App\Controller\PasswordResetController</a></td><td class="text-right">38</td></tr>
+       <tr><td><a href="Entity/User.php.html#20">App\Entity\User</a></td><td class="text-right">34</td></tr>
+       <tr><td><a href="Command/AssignAnonymousUserToTaskCommand.php.html#13">App\Command\AssignAnonymousUserToTaskCommand</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#19">App\Controller\UserController</a></td><td class="text-right">26</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#17">App\Repository\UserRepository</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DataFixtures/Dev/TaskFixtures.php.html#11">App\DataFixtures\Dev\TaskFixtures</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repository/TaskRepository.php.html#17">App\Repository\TaskRepository</a></td><td class="text-right">5</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Command/AssignAnonymousUserToTaskCommand.php.html#20"><abbr title="App\Command\AssignAnonymousUserToTaskCommand::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Command/AssignAnonymousUserToTaskCommand.php.html#27"><abbr title="App\Command\AssignAnonymousUserToTaskCommand::configure">configure</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Command/AssignAnonymousUserToTaskCommand.php.html#32"><abbr title="App\Command\AssignAnonymousUserToTaskCommand::execute">execute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/SecurityController.php.html#31"><abbr title="App\Controller\SecurityController::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#139"><abbr title="App\Controller\TaskController::deleteTaskAction">deleteTaskAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#172"><abbr title="App\Controller\TaskController::listTodoAction">listTodoAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#39"><abbr title="App\Controller\UserController::createAction">createAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/Dev/AppFixtures.php.html#10"><abbr title="App\DataFixtures\Dev\AppFixtures::load">load</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/Dev/TaskFixtures.php.html#13"><abbr title="App\DataFixtures\Dev\TaskFixtures::load">load</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/Test/AppTestFixtures.php.html#118"><abbr title="App\DataFixtures\Test\AppTestFixtures::getGroups">getGroups</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#151"><abbr title="App\Entity\User::eraseCredentials">eraseCredentials</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#158"><abbr title="App\Entity\User::getTasks">getTasks</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#163"><abbr title="App\Entity\User::addTask">addTask</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#172"><abbr title="App\Entity\User::getResetToken">getResetToken</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#184"><abbr title="App\Entity\User::getTokenExpiryDate">getTokenExpiryDate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#196"><abbr title="App\Entity\User::isTokenExpired">isTokenExpired</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#24"><abbr title="App\Repository\UserRepository::add">add</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#33"><abbr title="App\Repository\UserRepository::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/PasswordResetController.php.html#59"><abbr title="App\Controller\PasswordResetController::resetPassword">resetPassword</abbr></a></td><td class="text-right">21%</td></tr>
+       <tr><td><a href="Controller/PasswordResetController.php.html#22"><abbr title="App\Controller\PasswordResetController::forgotPassword">forgotPassword</abbr></a></td><td class="text-right">37%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#27"><abbr title="App\Controller\TaskController::listAction">listAction</abbr></a></td><td class="text-right">53%</td></tr>
+       <tr><td><a href="Repository/TaskRepository.php.html#24"><abbr title="App\Repository\TaskRepository::add">add</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Repository/TaskRepository.php.html#33"><abbr title="App\Repository\TaskRepository::remove">remove</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#120"><abbr title="App\Controller\TaskController::toggleTaskAction">toggleTaskAction</abbr></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#90"><abbr title="App\Controller\TaskController::editAction">editAction</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#77"><abbr title="App\Controller\UserController::editUser">editUser</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controller/TaskController.php.html#139"><abbr title="App\Controller\TaskController::deleteTaskAction">deleteTaskAction</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controller/PasswordResetController.php.html#59"><abbr title="App\Controller\PasswordResetController::resetPassword">resetPassword</abbr></a></td><td class="text-right">17</td></tr>
+       <tr><td><a href="Command/AssignAnonymousUserToTaskCommand.php.html#32"><abbr title="App\Command\AssignAnonymousUserToTaskCommand::execute">execute</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#39"><abbr title="App\Controller\UserController::createAction">createAction</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#77"><abbr title="App\Controller\UserController::editUser">editUser</abbr></a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Controller/PasswordResetController.php.html#22"><abbr title="App\Controller\PasswordResetController::forgotPassword">forgotPassword</abbr></a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="DataFixtures/Dev/TaskFixtures.php.html#13"><abbr title="App\DataFixtures\Dev\TaskFixtures::load">load</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity/User.php.html#163"><abbr title="App\Entity\User::addTask">addTask</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity/User.php.html#196"><abbr title="App\Entity\User::isTokenExpired">isTokenExpired</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#24"><abbr title="App\Repository\UserRepository::add">add</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#33"><abbr title="App\Repository\UserRepository::remove">remove</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#90"><abbr title="App\Controller\TaskController::editAction">editAction</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#27"><abbr title="App\Controller\TaskController::listAction">listAction</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Repository/TaskRepository.php.html#24"><abbr title="App\Repository\TaskRepository::add">add</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Repository/TaskRepository.php.html#33"><abbr title="App\Repository\TaskRepository::remove">remove</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#120"><abbr title="App\Controller\TaskController::toggleTaskAction">toggleTaskAction</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 9.2.32</a> using <a href="https://secure.php.net/" target="_top">PHP 8.2.0</a> and <a href="https://phpunit.de/">PHPUnit 9.5.0</a> at Thu Oct 31 13:01:04 CET 2024.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/jquery.min.js?v=9.2.32" type="text/javascript"></script>
+  <script src="_js/d3.min.js?v=9.2.32" type="text/javascript"></script>
+  <script src="_js/nv.d3.min.js?v=9.2.32" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([3,0,1,1,0,0,0,2,2,1,1,7], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([18,0,0,1,1,0,1,2,0,3,0,47], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,5,"<a href=\"Command\/AssignAnonymousUserToTaskCommand.php.html#13\">App\\Command\\AssignAnonymousUserToTaskCommand<\/a>"],[100,1,"<a href=\"Controller\/DefaultController.php.html#9\">App\\Controller\\DefaultController<\/a>"],[28.57142857142857,9,"<a href=\"Controller\/PasswordResetController.php.html#16\">App\\Controller\\PasswordResetController<\/a>"],[85.71428571428571,2,"<a href=\"Controller\/SecurityController.php.html#11\">App\\Controller\\SecurityController<\/a>"],[63.013698630136986,20,"<a href=\"Controller\/TaskController.php.html#15\">App\\Controller\\TaskController<\/a>"],[60,14,"<a href=\"Controller\/UserController.php.html#19\">App\\Controller\\UserController<\/a>"],[0,1,"<a href=\"DataFixtures\/Dev\/AppFixtures.php.html#8\">App\\DataFixtures\\Dev\\AppFixtures<\/a>"],[0,2,"<a href=\"DataFixtures\/Dev\/TaskFixtures.php.html#11\">App\\DataFixtures\\Dev\\TaskFixtures<\/a>"],[98.38709677419355,7,"<a href=\"DataFixtures\/Test\/AppTestFixtures.php.html#14\">App\\DataFixtures\\Test\\AppTestFixtures<\/a>"],[100,12,"<a href=\"Entity\/Task.php.html#12\">App\\Entity\\Task<\/a>"],[71.875,23,"<a href=\"Entity\/User.php.html#20\">App\\Entity\\User<\/a>"],[100,2,"<a href=\"Form\/PasswordResetRequestType.php.html#10\">App\\Form\\PasswordResetRequestType<\/a>"],[100,2,"<a href=\"Form\/ResetPasswordType.php.html#10\">App\\Form\\ResetPasswordType<\/a>"],[100,3,"<a href=\"Form\/TaskType.php.html#14\">App\\Form\\TaskType<\/a>"],[100,9,"<a href=\"Form\/UserType.php.html#18\">App\\Form\\UserType<\/a>"],[100,0,"<a href=\"Kernel.php.html#8\">App\\Kernel<\/a>"],[71.42857142857143,5,"<a href=\"Repository\/TaskRepository.php.html#17\">App\\Repository\\TaskRepository<\/a>"],[14.285714285714285,5,"<a href=\"Repository\/UserRepository.php.html#17\">App\\Repository\\UserRepository<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Command\/AssignAnonymousUserToTaskCommand.php.html#20\">App\\Command\\AssignAnonymousUserToTaskCommand::__construct<\/a>"],[0,1,"<a href=\"Command\/AssignAnonymousUserToTaskCommand.php.html#27\">App\\Command\\AssignAnonymousUserToTaskCommand::configure<\/a>"],[0,3,"<a href=\"Command\/AssignAnonymousUserToTaskCommand.php.html#32\">App\\Command\\AssignAnonymousUserToTaskCommand::execute<\/a>"],[100,1,"<a href=\"Controller\/DefaultController.php.html#14\">App\\Controller\\DefaultController::index<\/a>"],[37.5,4,"<a href=\"Controller\/PasswordResetController.php.html#22\">App\\Controller\\PasswordResetController::forgotPassword<\/a>"],[21.052631578947366,5,"<a href=\"Controller\/PasswordResetController.php.html#59\">App\\Controller\\PasswordResetController::resetPassword<\/a>"],[100,1,"<a href=\"Controller\/SecurityController.php.html#17\">App\\Controller\\SecurityController::loginAction<\/a>"],[0,1,"<a href=\"Controller\/SecurityController.php.html#31\">App\\Controller\\SecurityController::logout<\/a>"],[100,1,"<a href=\"Controller\/TaskController.php.html#19\">App\\Controller\\TaskController::__construct<\/a>"],[53.84615384615385,2,"<a href=\"Controller\/TaskController.php.html#27\">App\\Controller\\TaskController::listAction<\/a>"],[100,4,"<a href=\"Controller\/TaskController.php.html#58\">App\\Controller\\TaskController::createAction<\/a>"],[85.71428571428571,4,"<a href=\"Controller\/TaskController.php.html#90\">App\\Controller\\TaskController::editAction<\/a>"],[83.33333333333334,2,"<a href=\"Controller\/TaskController.php.html#120\">App\\Controller\\TaskController::toggleTaskAction<\/a>"],[0,5,"<a href=\"Controller\/TaskController.php.html#139\">App\\Controller\\TaskController::deleteTaskAction<\/a>"],[0,1,"<a href=\"Controller\/TaskController.php.html#172\">App\\Controller\\TaskController::listTodoAction<\/a>"],[100,1,"<a href=\"Controller\/TaskController.php.html#188\">App\\Controller\\TaskController::listDoneAction<\/a>"],[100,1,"<a href=\"Controller\/UserController.php.html#26\">App\\Controller\\UserController::listAction<\/a>"],[0,3,"<a href=\"Controller\/UserController.php.html#39\">App\\Controller\\UserController::createAction<\/a>"],[88.46153846153845,10,"<a href=\"Controller\/UserController.php.html#77\">App\\Controller\\UserController::editUser<\/a>"],[0,1,"<a href=\"DataFixtures\/Dev\/AppFixtures.php.html#10\">App\\DataFixtures\\Dev\\AppFixtures::load<\/a>"],[0,2,"<a href=\"DataFixtures\/Dev\/TaskFixtures.php.html#13\">App\\DataFixtures\\Dev\\TaskFixtures::load<\/a>"],[100,1,"<a href=\"DataFixtures\/Test\/AppTestFixtures.php.html#18\">App\\DataFixtures\\Test\\AppTestFixtures::__construct<\/a>"],[100,1,"<a href=\"DataFixtures\/Test\/AppTestFixtures.php.html#23\">App\\DataFixtures\\Test\\AppTestFixtures::load<\/a>"],[100,1,"<a href=\"DataFixtures\/Test\/AppTestFixtures.php.html#35\">App\\DataFixtures\\Test\\AppTestFixtures::loadUsers<\/a>"],[100,3,"<a href=\"DataFixtures\/Test\/AppTestFixtures.php.html#91\">App\\DataFixtures\\Test\\AppTestFixtures::loadTasks<\/a>"],[0,1,"<a href=\"DataFixtures\/Test\/AppTestFixtures.php.html#118\">App\\DataFixtures\\Test\\AppTestFixtures::getGroups<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#47\">App\\Entity\\Task::getId<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#52\">App\\Entity\\Task::getCreatedAt<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#57\">App\\Entity\\Task::setCreatedAt<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#64\">App\\Entity\\Task::getTitle<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#69\">App\\Entity\\Task::setTitle<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#76\">App\\Entity\\Task::getContent<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#81\">App\\Entity\\Task::setContent<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#88\">App\\Entity\\Task::isDone<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#93\">App\\Entity\\Task::setIsDone<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#100\">App\\Entity\\Task::getAuthor<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#105\">App\\Entity\\Task::setAuthor<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#111\">App\\Entity\\Task::toggle<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#74\">App\\Entity\\User::__construct<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#79\">App\\Entity\\User::getId<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#86\">App\\Entity\\User::getUserIdentifier<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#91\">App\\Entity\\User::getUsername<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#96\">App\\Entity\\User::setUsername<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#103\">App\\Entity\\User::getPassword<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#108\">App\\Entity\\User::setPassword<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#115\">App\\Entity\\User::getEmail<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#120\">App\\Entity\\User::setEmail<\/a>"],[100,2,"<a href=\"Entity\/User.php.html#127\">App\\Entity\\User::getRoles<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#137\">App\\Entity\\User::setRoles<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#143\">App\\Entity\\User::getSalt<\/a>"],[0,1,"<a href=\"Entity\/User.php.html#151\">App\\Entity\\User::eraseCredentials<\/a>"],[0,1,"<a href=\"Entity\/User.php.html#158\">App\\Entity\\User::getTasks<\/a>"],[0,2,"<a href=\"Entity\/User.php.html#163\">App\\Entity\\User::addTask<\/a>"],[0,1,"<a href=\"Entity\/User.php.html#172\">App\\Entity\\User::getResetToken<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#177\">App\\Entity\\User::setResetToken<\/a>"],[0,1,"<a href=\"Entity\/User.php.html#184\">App\\Entity\\User::getTokenExpiryDate<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#189\">App\\Entity\\User::setTokenExpiryDate<\/a>"],[0,2,"<a href=\"Entity\/User.php.html#196\">App\\Entity\\User::isTokenExpired<\/a>"],[100,1,"<a href=\"Form\/PasswordResetRequestType.php.html#12\">App\\Form\\PasswordResetRequestType::buildForm<\/a>"],[100,1,"<a href=\"Form\/PasswordResetRequestType.php.html#20\">App\\Form\\PasswordResetRequestType::configureOptions<\/a>"],[100,1,"<a href=\"Form\/ResetPasswordType.php.html#12\">App\\Form\\ResetPasswordType::buildForm<\/a>"],[100,1,"<a href=\"Form\/ResetPasswordType.php.html#20\">App\\Form\\ResetPasswordType::configureOptions<\/a>"],[100,2,"<a href=\"Form\/TaskType.php.html#16\">App\\Form\\TaskType::buildForm<\/a>"],[100,1,"<a href=\"Form\/TaskType.php.html#36\">App\\Form\\TaskType::configureOptions<\/a>"],[100,1,"<a href=\"Form\/UserType.php.html#22\">App\\Form\\UserType::__construct<\/a>"],[100,7,"<a href=\"Form\/UserType.php.html#27\">App\\Form\\UserType::buildForm<\/a>"],[100,1,"<a href=\"Form\/UserType.php.html#81\">App\\Form\\UserType::configureOptions<\/a>"],[100,1,"<a href=\"Repository\/TaskRepository.php.html#19\">App\\Repository\\TaskRepository::__construct<\/a>"],[66.66666666666666,2,"<a href=\"Repository\/TaskRepository.php.html#24\">App\\Repository\\TaskRepository::add<\/a>"],[66.66666666666666,2,"<a href=\"Repository\/TaskRepository.php.html#33\">App\\Repository\\TaskRepository::remove<\/a>"],[100,1,"<a href=\"Repository\/UserRepository.php.html#19\">App\\Repository\\UserRepository::__construct<\/a>"],[0,2,"<a href=\"Repository\/UserRepository.php.html#24\">App\\Repository\\UserRepository::add<\/a>"],[0,2,"<a href=\"Repository\/UserRepository.php.html#33\">App\\Repository\\UserRepository::remove<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

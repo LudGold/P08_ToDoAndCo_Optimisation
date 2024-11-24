@@ -9,7 +9,8 @@ body {
 }
 
 .slide-image {
-    width: 100%;
+    width: auto;
+    height: auto
 }
 
 .carousel-holder {

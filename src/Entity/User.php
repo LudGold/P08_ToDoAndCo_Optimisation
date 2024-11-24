@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 
 
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
  */
-class User implements UserInterface
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
      * @ORM\Id
@@ -30,8 +31,17 @@ class User implements UserInterface
      */
     private $username;
 
-    /**
+        /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank(message="Le mot de passe ne doit pas être vide.")
+     * @Assert\Length(
+     *     min = 8,
+     *     minMessage = "Le mot de passe doit comporter au moins {{ limit }} caractères"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/",
+     *     message="Le mot de passe doit comporter au moins une majuscule, une minuscule, un chiffre et un caractère spécial."
+     * )
      */
     private $password;
 

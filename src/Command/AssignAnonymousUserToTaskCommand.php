@@ -28,7 +28,6 @@ class AssignAnonymousUserToTaskCommand extends Command
     {
         $this->setDescription('Assigner l\'utilisateur "anonyme" à toutes les tâches sans auteur.');
     }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

@@ -26,6 +26,7 @@ class TaskController extends AbstractController
      */
     public function listAction(): Response
     {
+        
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
         // Récupère l'utilisateur "anonyme" pour le rôle admin
@@ -48,7 +49,8 @@ class TaskController extends AbstractController
             $tasks = $this->entityManager->getRepository(Task::class)->findBy(['author' => $user]);
         }
 
-        return $this->render('task/list.html.twig', ['tasks' => $tasks]);
+        return $this->render('task/list.html.twig', [ 'tasks' => $tasks,
+        'title' => 'Liste des tâches', ]);
     }
 
     /**
@@ -104,7 +106,6 @@ class TaskController extends AbstractController
             $this->entityManager->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
-
             return $this->redirectToRoute('task_list');
         }
 
@@ -136,37 +137,36 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete", methods={"GET", "POST"})
      */
-    public function deleteTaskAction(Task $task, Request $request): Response
+    public function deleteTaskAction(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
-        if ($task->getAuthor() !== $user) {
-            // Ajouter un message flash
-            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette tâche.');
-
-            // Rediriger vers la liste des tâches de l'utilisateur
-            return $this->redirectToRoute('task_list');
-        }
+        
         // Récupérer l'utilisateur "anonyme" pour la comparaison
         $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
-
+    
         // Vérification des autorisations de suppression
         if ($task->getAuthor() !== $user && (!$isAdmin || $task->getAuthor() !== $anonymousUser)) {
             // Si l'utilisateur n'est pas l'auteur et que ce n'est pas un admin qui supprime une tâche anonyme
-            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer cette tâche.');
-        }
-        // Vérification du token CSRF
-        if (!$this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette tâche.');
             return $this->redirectToRoute('task_list');
         }
-
-        $this->entityManager->remove($task);
-        $this->entityManager->flush();
-
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
-
+    
+        // Vérification du token CSRF
+        if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
+            // Suppression de la tâche
+            $entityManager->remove($task);
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+        } else {
+            // Si le token CSRF est invalide
+            $this->addFlash('error', 'Le token CSRF est invalide.');
+        }
+    
         return $this->redirectToRoute('task_list');
     }
+    
     /**
      * @Route("/tasks/todo", name="task_list_todo", methods={"GET"})
      */
