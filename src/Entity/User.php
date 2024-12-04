@@ -28,6 +28,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     /**
      * @ORM\Column(type="string", length=25)
+     * @Assert\NotBlank(message="Le nom d'utilisateur ne peut pas être vide.")
      */
     private $username;
 

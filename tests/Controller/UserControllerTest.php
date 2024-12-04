@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\User;
 use App\DataFixtures\Test\AppTestFixtures;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\BrowserKit\Cookie as BrowserKitCookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Doctrine\ORM\EntityManagerInterface;
@@ -113,118 +114,42 @@ class UserControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('tbody tr')->count(), 'La table doit contenir des utilisateurs.');
     }
 
-    // public function testEditOwnProfile()
-    // {
-    //     // Récupérer un utilisateur standard
-    //     $user = $this->userRepository->findOneBy(['username' => 'user']);
-    //     $this->assertNotNull($user, 'User should exist in the database.');
+public function testUserCanEditOwnProfile(): void
+{
+    // Récupérer un utilisateur standard depuis les fixtures
+    $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'user']);
+    $this->assertNotNull($user, 'Un utilisateur de test doit exister dans la base de données.');
 
-    //     // Simuler une connexion en tant qu'utilisateur standard
-    //     $this->client->loginUser($user);
+    // Connecter l'utilisateur
+    $this->client->loginUser($user);
 
-    //     // Simuler une requête GET vers la page d'édition de son propre profil
-    //     $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+    // Simuler une requête GET vers la page d'édition de son propre profil
+    $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
 
-    //     // Vérifier que la page d'édition renvoie un code 200
-    //     $this->assertResponseStatusCodeSame(200);
+    // Vérifier que la page d'édition est accessible
+    $this->assertResponseIsSuccessful();
+    $this->assertSelectorExists('form[name="user"]');
+   
+    // Soumettre le formulaire avec de nouvelles données
+    $form = $crawler->selectButton('Modifier mon profil')->form([
+        'user[email]' => 'newemail@example.com',
+        'user[password][first]' => 'NewPassword123!',
+        'user[password][second]' => 'NewPassword123!',
+    ]);
 
-    //     // Remplir le formulaire avec des modifications
-    //     $form = $crawler->selectButton('Modifier')->form([
-    //         'user[username]' => 'updatedUsername',
-    //         'user[email]' => 'updateduser@example.com',
-    //         'user[password][first]' => 'newpassword',
-    //         'user[password][second]' => 'newpassword',
-    //     ]);
+    $this->client->submit($form);
 
-    //     // Soumettre le formulaire
-    //     $this->client->submit($form);
+    // Vérifier la redirection après la modification
+    $this->assertResponseRedirects('/');
 
-    //     // Vérifier la redirection après la modification
-    //     $this->assertResponseRedirects('/');
+    // Suivre la redirection et vérifier le message de succès
+    $this->client->followRedirect();
+    $this->assertSelectorTextContains('.alert-success', 'Votre profil a été mis à jour.');
 
-    //     // Suivre la redirection
-    //     $this->client->followRedirect();
-
-    //     // Vérifier qu'un message flash de succès apparaît
-    //     $this->assertSelectorTextContains('.flash-success', 'Votre profil a été mis à jour.');
-
-    //     // Vérifier que les modifications ont été appliquées dans la base de données
-    //     $updatedUser = $this->userRepository->findOneBy(['username' => 'updatedUsername']);
-    //     $this->assertNotNull($updatedUser, 'Updated user should exist in the database.');
-    //     $this->assertEquals('updateduser@example.com', $updatedUser->getEmail());
-    // }
-    // public function testAdminEditOtherUserRoles()
-    // {
-    //     // Récupérer un administrateur
-    //     $adminUser = $this->userRepository->findOneBy(['username' => 'admin']);
-    //     $this->assertNotNull($adminUser);
-
-    //     // Simuler une connexion en tant qu'admin
-    //     $this->client->loginUser($adminUser);
-
-    //     // Récupérer un autre utilisateur à éditer
-    //     $user = $this->userRepository->findOneBy(['username' => 'user']);
-    //     $this->assertNotNull($user);
-
-    //     // Simuler une requête GET vers la page d'édition de cet utilisateur
-    //     $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
-
-    //     // Vérifier que la page d'édition est accessible
-    //     $this->assertResponseStatusCodeSame(200);
-
-    //     // Modifier les rôles de l'utilisateur
-    //     $form = $crawler->selectButton('Modifier')->form([
-    //         'user[roles]' => [], // Modification du rôle de l'utilisateur
-    //     ]);
-
-    //     // Soumettre le formulaire
-    //     $this->client->submit($form);
-
-    //     // Vérifier la redirection après la modification
-    //     $this->assertResponseRedirects('admin_user_list');
-
-    //     // Suivre la redirection et vérifier le message de succès
-    //     $this->client->followRedirect();
-    //     $this->assertSelectorTextContains('.flash-success', 'Votre profil a été mis à jour.');
-
-    //     // Vérifier que les modifications sont bien dans la base de données
-    //     $updatedUser = $this->userRepository->findOneBy(['username' => 'user']);
-    //     $this->assertContains('ROLE_ADMIN', $updatedUser->getRoles());
-    // }
-    // public function testAdminEditOwnRoles()
-    // {
-    //     // Récupérer un administrateur
-    //     $adminUser = $this->userRepository->findOneBy(['username' => 'admin']);
-    //     $this->assertNotNull($adminUser);
-
-    //     // Simuler une connexion en tant qu'admin
-    //     $this->client->loginUser($adminUser);
-
-    //     // Simuler une requête GET vers la page d'édition de son propre profil
-    //     $crawler = $this->client->request('GET', '/users/' . $adminUser->getId() . '/edit');
-
-    //     // Vérifier que la page d'édition est accessible
-    //     $this->assertResponseStatusCodeSame(200);
-
-    //     // Remplir le formulaire et modifier son rôle
-    //     $form = $crawler->selectButton('Modifier')->form([
-    //         'user[username]' => 'admin',
-    //         'user[roles]' => ['ROLE_ADMIN', 'ROLE_USER'], // Modification de ses propres rôles
-    //     ]);
-
-    //     // Soumettre le formulaire
-    //     $this->client->submit($form);
-
-    //     // Vérifier la redirection après la modification
-    //     $this->assertResponseRedirects('/');
-
-    //     // Suivre la redirection et vérifier le message de succès
-    //     $this->client->followRedirect();
-    //     $this->assertSelectorTextContains('.flash-success', 'Votre profil a été mis à jour.');
-
-    //     // Vérifier que les modifications sont bien dans la base de données
-    //     $updatedAdmin = $this->userRepository->findOneBy(['username' => 'admin']);
-    //     $this->assertContains('ROLE_ADMIN', $updatedAdmin->getRoles());
-    // }
+    // Vérifier que les modifications sont bien dans la base de données
+    $updatedUser = $this->userRepository->findOneBy(['email' => 'newemail@example.com']);
+    $this->assertNotNull($updatedUser);
+    $this->assertEquals($user->getId(), $updatedUser->getId());
+}
 
 }

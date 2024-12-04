@@ -13,7 +13,12 @@ class SecurityControllerTest extends WebTestCase
         parent::setUp();
         $this->client = static::createClient();
     }
-
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+       
+        $this->client = null;
+    } 
     public function testLoginPage()
     {
         // Simule une requête GET vers la page de login
@@ -32,18 +37,25 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('input[name="_password"]');
     }
 
-    public function testLogout()
+    public function testLogoutRouteExists()
     {
-        // Simule une requête GET vers la route de déconnexion
+       
+        // Appeler la route /logout
         $this->client->request('GET', '/logout');
 
-        // Le framework de sécurité devrait intercepter cette route
-        $this->assertResponseRedirects();
+        // Vérifier que la réponse est une redirection (gérée par Symfony)
+        $this->assertResponseStatusCodeSame(302, 'La route /logout doit rediriger l\'utilisateur.');
     }
 
-    protected function tearDown(): void
+    public function testLogoutRedirection()
     {
-        parent::tearDown();
-        $this->client = null;
+            
+        // Accéder à /logout
+        $this->client->request('GET', '/logout');
+    
+        // Vérifiez la redirection
+        $this->assertResponseRedirects('http://localhost/login');
     }
+        
+   
 }
