@@ -16,13 +16,13 @@ class TaskType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title',TextType::class, [
-                'attr' => ['class' => 'wide-title']])
-            ->add('content', TextareaType::class,[
-            'attr' => ['class' => 'wide-textarea'],
+            ->add('title', TextType::class, [
+                'attr' => ['class' => 'wide-title, form-control'],
             ])
-            // ->add('author') 
-            //===> must be the user authenticated
+            ->add('content', TextareaType::class, [
+                'attr' => ['class' => 'wide-textarea, form-control'],
+            ])
+
         ;
         // Si c'est en mode édition, on n'ajoute pas le champ 'author'
         if (!$options['is_edit']) {
