@@ -11,64 +11,63 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-
-
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
+ *         @ORM\Entity(repositoryClass=UserRepository::class)
+ *         @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
  */
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     *         @ORM\Id
+     *         @ORM\GeneratedValue
+     *         @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25)
-     * @Assert\NotBlank(message="Le nom d'utilisateur ne peut pas être vide.")
+     *         @ORM\Column(type="string", length=25)
+     *         @Assert\NotBlank(message="Le nom d'utilisateur ne peut pas être vide.")
      */
     private $username;
 
-        /**
-     * @ORM\Column(type="string", length=64)
-     * @Assert\NotBlank(message="Le mot de passe ne doit pas être vide.")
-     * @Assert\Length(
-     *     min = 8,
-     *     minMessage = "Le mot de passe doit comporter au moins {{ limit }} caractères"
-     * )
-     * @Assert\Regex(
-     *     pattern="/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/",
-     *     message="Le mot de passe doit comporter au moins une majuscule, une minuscule, un chiffre et un caractère spécial."
-     * )
+    /**
+     *         @ORM\Column(type="string", length=64)
+     *         @Assert\NotBlank(message="Le mot de passe ne doit pas être vide.")
+     *         @Assert\Length(
+     *             min = 8,
+     *             minMessage = "Le mot de passe doit comporter au moins {{ limit }} caractères"
+     *         )
+     *         @Assert\Regex(
+     *             pattern="/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/",
+     *             message="Le mot de passe doit comporter au moins une majuscule, une minuscule, un chiffre et un caractère spécial."
+     *         )
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank(message="L'email ne doit pas être vide.")
-     * @Assert\Email(message="L'email '{{ value }}' n'est pas valide.")
+     *         @ORM\Column(type="string", length=180, unique=true)
+     *         @Assert\NotBlank(message="L'email ne doit pas être vide.")
+     *         @Assert\Email(message="L'email '{{ value }}' n'est pas valide.")
      */
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     *         @ORM\Column(type="json")
      */
     private $roles = [];
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="author", orphanRemoval=true)
+     *         @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="author", orphanRemoval=true)
      */
     private $tasks;
+
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     *         @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resetToken;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     *         @ORM\Column(type="datetime", nullable=true)
      */
     private $tokenExpiryDate;
 
@@ -81,8 +80,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         return $this->id;
     }
+
     /**
-     * Implémentation de UserInterface : retourne le nom d'utilisateur (identifiant).
+     *         Implémentation de UserInterface : retourne le nom d'utilisateur (identifiant).
      */
     public function getUserIdentifier(): string
     {
@@ -141,20 +141,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
         return $this;
     }
+
     public function getSalt(): ?string
     {
         return null;
     }
 
     /**
-     * Efface les informations sensibles après l'authentification (si nécessaire).
+     *         Efface les informations sensibles après l'authentification (si nécessaire).
      */
     public function eraseCredentials()
     {
         // Si tu stockes des informations sensibles.
     }
+
     /**
-     * @return Collection|Task[]
+     *         @return Collection|Task[]
      */
     public function getTasks(): Collection
     {
@@ -170,7 +172,8 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
         return $this;
     }
-     public function getResetToken(): ?string
+
+    public function getResetToken(): ?string
     {
         return $this->resetToken;
     }

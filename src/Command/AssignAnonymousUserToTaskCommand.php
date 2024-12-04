@@ -12,6 +12,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AssignAnonymousUserToTaskCommand extends Command
 {
+    /**
+     * The name of the command to assign anonymous users to tasks.
+     * This is used to identify the command when running it via the CLI.
+     */
     protected static $defaultName = 'app:assign-anonymous-to-tasks';
 
     private $taskRepository;
@@ -28,8 +32,7 @@ class AssignAnonymousUserToTaskCommand extends Command
     {
         $this->setDescription('Assigner l\'utilisateur "anonyme" à toutes les tâches sans auteur.');
     }
-    public function execute(InputInterface $input, OutputInterface $output): int
-    {
+    public function execute(InputInterface $input, OutputInterface $output): int{
         $io = new SymfonyStyle($input, $output);
 
         // Récupérer l'utilisateur anonyme

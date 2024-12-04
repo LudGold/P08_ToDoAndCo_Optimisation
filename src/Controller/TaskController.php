@@ -26,7 +26,6 @@ class TaskController extends AbstractController
      */
     public function listAction(): Response
     {
-        
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
         // Récupère l'utilisateur "anonyme" pour le rôle admin
@@ -49,8 +48,10 @@ class TaskController extends AbstractController
             $tasks = $this->entityManager->getRepository(Task::class)->findBy(['author' => $user]);
         }
 
-        return $this->render('task/list.html.twig', [ 'tasks' => $tasks,
-        'title' => 'Liste des tâches', ]);
+        return $this->render('task/list.html.twig', [
+            'tasks' => $tasks,
+            'title' => 'Liste des tâches',
+        ]);
     }
 
     /**
@@ -141,32 +142,32 @@ class TaskController extends AbstractController
     {
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
-        
+
         // Récupérer l'utilisateur "anonyme" pour la comparaison
         $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
-    
+
         // Vérification des autorisations de suppression
         if ($task->getAuthor() !== $user && (!$isAdmin || $task->getAuthor() !== $anonymousUser)) {
             // Si l'utilisateur n'est pas l'auteur et que ce n'est pas un admin qui supprime une tâche anonyme
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette tâche.');
             return $this->redirectToRoute('task_list');
         }
-    
+
         // Vérification du token CSRF
         if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             // Suppression de la tâche
             $entityManager->remove($task);
             $entityManager->flush();
-            
+
             $this->addFlash('success', 'La tâche a bien été supprimée.');
         } else {
             // Si le token CSRF est invalide
             $this->addFlash('error', 'Le token CSRF est invalide.');
         }
-    
+
         return $this->redirectToRoute('task_list');
     }
-    
+
     /**
      * @Route("/tasks/todo", name="task_list_todo", methods={"GET"})
      */

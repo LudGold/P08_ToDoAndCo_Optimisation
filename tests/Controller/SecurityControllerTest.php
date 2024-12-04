@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class SecurityControllerTest extends WebTestCase
 {
     private $client;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -16,9 +16,8 @@ class SecurityControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-       
         $this->client = null;
-    } 
+    }
     public function testLoginPage()
     {
         // Simule une requête GET vers la page de login
@@ -39,7 +38,6 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLogoutRouteExists()
     {
-       
         // Appeler la route /logout
         $this->client->request('GET', '/logout');
 
@@ -49,13 +47,9 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLogoutRedirection()
     {
-            
         // Accéder à /logout
         $this->client->request('GET', '/logout');
-    
         // Vérifiez la redirection
         $this->assertResponseRedirects('http://localhost/login');
     }
-        
-   
 }

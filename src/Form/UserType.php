@@ -70,13 +70,6 @@ class UserType extends AbstractType
                 'attr' => ['class' => 'form-check'],
             ]);
         }
-        if ($isUserConnected) {
-            $builder->add('submit', SubmitType::class, [
-                'label' => 'Modifier mon profil',
-                'attr' => ['class' => 'btn btn-success pull-right'],
-
-            ]);
-        }
     }
     public function configureOptions(OptionsResolver $resolver)
     {

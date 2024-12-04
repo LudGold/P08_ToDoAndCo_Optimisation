@@ -7,11 +7,15 @@ use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Class Task
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
 class Task
 {
     /**
+     * Identifiant unique de la tâche.
+     * 
+     * @var int
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -19,26 +23,41 @@ class Task
     private $id;
 
     /**
+     * Date de création de la tâche.
+     * 
+     * @var \DateTimeInterface
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
+     * Titre de la tâche.
+     * 
+     * @var string
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
+     * Contenu de la tâche.
+     * 
+     * @var string
      * @ORM\Column(type="text")
      */
     private $content;
 
     /**
+     * Statut de la tâche : terminée ou non.
+     * 
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     private $isDone = false;
 
     /**
+     * Auteur de la tâche.
+     * 
+     * @var User
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tasks")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -108,6 +127,7 @@ class Task
 
         return $this;
     }
+
     public function toggle(bool $flag): self
     {
         $this->isDone = $flag;

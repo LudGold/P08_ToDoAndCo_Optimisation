@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Form;
 
 use App\Form\PasswordResetRequestType;
@@ -8,7 +9,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 class PasswordResetRequestTypeTest extends KernelTestCase
 {
     private $formFactory;
-
     protected function setUp(): void
     {
         // Démarrer le kernel
@@ -42,7 +42,4 @@ class PasswordResetRequestTypeTest extends KernelTestCase
 
         $this->assertEquals('Nom d\'utilisateur', $usernameConfig->getOption('label'));
     }
-
-  
 }
-

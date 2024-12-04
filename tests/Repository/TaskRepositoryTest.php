@@ -22,7 +22,6 @@ class TaskRepositoryTest extends KernelTestCase
 
         // Récupération de l'entity manager
         $this->entityManager = static::getContainer()->get('doctrine')->getManager();
-        
         // Récupération du repository
         $this->taskRepository = $this->entityManager->getRepository(Task::class);
 

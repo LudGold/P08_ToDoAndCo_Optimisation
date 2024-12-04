@@ -33,7 +33,6 @@ class TaskFixtures extends Fixture
             $task->setCreatedAt($faker->dateTimeBetween('-1 years', 'now'));
             $task->setIsDone($faker->boolean());  // Aléatoire : terminé ou non
             $task->setAuthor($anonymousUser);     // Associer l'utilisateur "anonyme"
-            
             $manager->persist($task);
         }
 

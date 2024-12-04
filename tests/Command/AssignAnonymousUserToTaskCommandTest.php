@@ -77,8 +77,7 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
         $this->assertStringContainsString('L\'utilisateur "anonyme" n\'existe pas.', $commandTester->getDisplay());
     }
 
-    public function testExecuteAssignsAnonymousUserToTasks(): void
-{
+    public function testExecuteAssignsAnonymousUserToTasks(): void {
     // Création de l'utilisateur anonyme pour le test
     $anonymousUser = new User();
     $anonymousUser->setUsername('anonyme');

@@ -25,7 +25,6 @@ class UserController extends AbstractController
      */
     public function listAction(UserRepository $userRepository): Response
     {
-        
         // Récupérer tous les utilisateurs
         $users = $userRepository->findAll();
 
@@ -72,16 +71,15 @@ class UserController extends AbstractController
         ]);
     }
 
-        /**
-     * @Route("/users/{id}/edit", name="app_user_edit")
+    /**
+     *         @Route("/users/{id}/edit", name="app_user_edit")
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger,  EntityManagerInterface $entityManager): Response
     {
-    
+
         // Modification d'un utilisateur
         $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
-
         // Validation et traitement du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
             // Encodage du mot de passe si nécessaire

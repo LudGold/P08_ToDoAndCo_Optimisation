@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PasswordResetController extends AbstractController
 {
-    
     /**
      * @Route("/forgot-password", name="app_forgot_password")
      */
@@ -33,14 +32,12 @@ class PasswordResetController extends AbstractController
                 // Génération d'un jeton unique et stockage dans la base de données
                 $token = bin2hex(random_bytes(32));
                 $user->setResetToken($token);
-                $user->setTokenExpiryDate(new \DateTime('+1 hour')); 
+                $user->setTokenExpiryDate(new \DateTime('+1 hour'));
                 // Durée de validité de 1 heure
-
                 $entityManager->flush();
 
                 return $this->redirectToRoute('app_reset_password', ['token' => $token]);
-
-                          } else {
+            } else {
                 $this->addFlash('danger', 'Utilisateur introuvable.');
             }
 
@@ -52,7 +49,7 @@ class PasswordResetController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * @Route("/reset-password/{token}", name="app_reset_password")
      */

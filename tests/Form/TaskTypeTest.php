@@ -22,7 +22,6 @@ class TaskTypeTest extends KernelTestCase
 
         // Récupérer l'entity manager
         $this->entityManager = static::getContainer()->get('doctrine')->getManager();
-        
         // Récupérer le form factory
         $this->formFactory = static::getContainer()->get(FormFactoryInterface::class);
 

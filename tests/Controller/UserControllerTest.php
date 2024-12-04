@@ -98,7 +98,8 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(['ROLE_USER'], $user->getRoles(), 'The user should have the ROLE_USER role');
     }
     public function testListActionForAdmin()
-    { // Récupérer un utilisateur administrateur (supposons que les fixtures aient ajouté un admin)
+    // Récupérer un utilisateur administrateur (supposons que les fixtures aient ajouté un admin)
+    { 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'admin']);
         $this->assertNotNull($user, 'Un utilisateur admin doit exister dans la base de données.');
 

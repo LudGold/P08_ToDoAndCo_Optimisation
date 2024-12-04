@@ -3,14 +3,13 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Entity\User; 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface; // Pour manipuler l'EntityManager
 use Symfony\Component\HttpFoundation\Response;
 
 class PasswordResetControllerTest extends WebTestCase
 {
 
-    
     public function testForgotPasswordRouteIsAccessible()
     {
         $client = static::createClient();
@@ -28,25 +27,25 @@ class PasswordResetControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Récupérer les services nécessaires
-    $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-    $userRepository = $entityManager->getRepository(User::class);
-    $email = 'testuser_' . uniqid() . '@example.com';
-    // Créer un utilisateur avec un token valide
-    $user = new User();
-    $user->setUsername('testuser');
-    $user->setEmail($email);
-    $user->setPassword('SecurePassword123!');
-    $user->setResetToken('valid-token');
-    $user->setTokenExpiryDate(new \DateTime('+1 hour')); // Token valide pendant 1 heure
-    $entityManager->persist($user);
-    $entityManager->flush();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $email = 'testuser_' . uniqid() . '@example.com';
+        // Créer un utilisateur avec un token valide
+        $user = new User();
+        $user->setUsername('testuser');
+        $user->setEmail($email);
+        $user->setPassword('SecurePassword123!');
+        $user->setResetToken('valid-token');
+        $user->setTokenExpiryDate(new \DateTime('+1 hour')); // Token valide pendant 1 heure
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-    // Accéder à la route avec le token valide
-    $crawler = $client->request('GET', '/reset-password/valid-token');
+        // Accéder à la route avec le token valide
+        $crawler = $client->request('GET', '/reset-password/valid-token');
 
-    // Vérifier que la réponse est correcte
-    $this->assertResponseIsSuccessful();
-    $this->assertSelectorExists('form[name="reset_password"]');
+        // Vérifier que la réponse est correcte
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form[name="reset_password"]');
     }
 
     public function testResetPasswordRouteWithInvalidToken()
@@ -88,12 +87,12 @@ class PasswordResetControllerTest extends WebTestCase
         $user->setTokenExpiryDate(new \DateTime('+1 hour')); // Token valide pendant 1 heure
         $entityManager->persist($user);
         $entityManager->flush();
-    
+
         // Accéder à la route avec le token valide
         $crawler = $client->request('GET', '/reset-password/valid-token');
-    
+
         // Vérifier que le bon template est affiché
         $this->assertSelectorExists('h1', 'Modifier votre mot de passe'); // Changez selon le contenu réel du template
         $this->assertSelectorExists('form[name="reset_password"]');
-}
+    }
 }

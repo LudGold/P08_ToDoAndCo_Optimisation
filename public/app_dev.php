@@ -18,9 +18,9 @@ $allowedIps = ['127.0.0.1', '::1'];
 $clientIp = $request->getClientIp();
 
 if (
-    $request->server->has('HTTP_CLIENT_IP') ||
-    $request->server->has('HTTP_X_FORWARDED_FOR') ||
-    ($clientIp && !in_array($clientIp, $allowedIps) && php_sapi_name() !== 'cli-server')
+    $request->server->has('HTTP_CLIENT_IP')
+    || $request->server->has('HTTP_X_FORWARDED_FOR')
+    || ($clientIp && !in_array($clientIp, $allowedIps) && php_sapi_name() !== 'cli-server')
 ) {
     $response = new Response(
         'You are not allowed to access this file.',
@@ -29,4 +29,3 @@ if (
     $response->send();
     return;
 }
-
