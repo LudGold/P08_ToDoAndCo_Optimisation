@@ -37,6 +37,9 @@
 				<a href="{{ path('app_user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
 
 				{% if app.user %}
+
+					<a href="{{ path('app_user_edit', {id: app.user.id}) }}" class="btn btn-primary">Modifier mon profil</a>
+
 					<a href="{{ path('app_logout') }}" class="pull-right btn btn-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 						Se déconnecter
 					</a>
@@ -47,7 +50,7 @@
 					<a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
 				{% endif %}
 			</div>
-		
+
 			<div class="row">
 				<div class="col-md-12">
 					{% for flash_message in app.session.flashBag.get('success') %}
