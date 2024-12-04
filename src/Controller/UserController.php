@@ -72,36 +72,19 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
+        /**
      * @Route("/users/{id}/edit", name="app_user_edit")
      */
-    public function editUser(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger,  EntityManagerInterface $entityManager): Response
     {
-        // Si l'utilisateur connecté n'est pas administrateur et essaie de modifier un autre utilisateur
-        if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
-            throw $this->createAccessDeniedException("Vous n'avez pas la permission de modifier cet utilisateur.");
-        }
-        // Si l'utilisateur est un administrateur, il peut modifier les rôles , sinon on bloque certains champs
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-        // Vérifie si l'utilisateur connecté modifie son propre profil
-        $isSelfEdit = ($this->getUser() === $user);
-
-        // Si ce n'est pas son propre profil et qu'il n'est pas admin
-        if (!$isAdmin && !$isSelfEdit) {
-            throw $this->createAccessDeniedException("Vous n'avez pas la permission de modifier cet utilisateur.");
-        }
-
-        $form = $this->createForm(UserType::class, $user, [
-            'is_edit' => true,
-            'is_admin' => $isAdmin,
-            'is_self_edit' => $isSelfEdit,
-        ]);
-
-
+    
+        // Modification d'un utilisateur
+        $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
 
+        // Validation et traitement du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
-            // Si l'utilisateur change son mot de passe, on le hash
+            // Encodage du mot de passe si nécessaire
             if ($user->getPassword()) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
                 $user->setPassword($hashedPassword);
@@ -110,15 +93,14 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Ajout d'un message flash de confirmation
-            $this->addFlash('success', 'Votre profil a été mis à jour.');
+            // Log de la modification de l'utilisateur
+            $logger->info('Un utilisateur a été modifié', ['user_id' => $user->getId()]);
 
-            // Redirection en fonction de l'utilisateur ou de l'administrateur
-            if ($isAdmin && !$isSelfEdit) {
-                return $this->redirectToRoute('admin_user_list'); // Redirection vers la gestion des utilisateurs pour l'admin
-            }
+            // Message de confirmation
+            $this->addFlash('success', "L'utilisateur a bien été modifié.");
 
-            return $this->redirectToRoute('app_homepage'); // homepage après validation du profil
+            // Redirection vers la liste des utilisateurs
+            return $this->redirectToRoute('user_list');
         }
 
         return $this->render('user/edit.html.twig', [
