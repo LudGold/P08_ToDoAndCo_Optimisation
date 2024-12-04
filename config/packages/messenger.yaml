@@ -1,21 +1,22 @@
-framework:
-    messenger:
-        # reset services after consuming messages
-        reset_on_message: true
+# framework:
+#     messenger:
+#         enabled: false
+#         # reset services after consuming messages
+#         reset_on_message: true
 
-        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        # failure_transport: failed
+#         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+#         # failure_transport: failed
 
-        transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                retry_strategy:
-                    max_retries: 5       # Nombre maximum de tentatives de réessai
-                    delay: 1000          # Délai initial (en millisecondes)
-                    multiplier: 2        # Facteur multiplicateur pour augmenter le délai après chaque tentative
-                    max_delay: 10000     # Délai maximum avant une nouvelle tentative'
+#         transports:
+#             # https://symfony.com/doc/current/messenger.html#transport-configuration
+#             async:
+#                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+#                 retry_strategy:
+#                     max_retries: 5       # Nombre maximum de tentatives de réessai
+#                     delay: 1000          # Délai initial (en millisecondes)
+#                     multiplier: 2        # Facteur multiplicateur pour augmenter le délai après chaque tentative
+#                     max_delay: 10000     # Délai maximum avant une nouvelle tentative'
 
-        routing:
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+#         routing:
+#             # Route your messages to the transports
+#             # 'App\Message\YourMessage': async

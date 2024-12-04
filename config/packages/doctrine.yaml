@@ -1,6 +1,6 @@
 doctrine:
     dbal:
-        driver: 'pdo_pgsql'
+        driver: 'pdo_mysql'
         server_version: '16'
         charset: utf8
         url: '%env(resolve:DATABASE_URL)%'
@@ -13,6 +13,7 @@ doctrine:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
+        enable_lazy_ghost_objects: true
         mappings:
             App:
                 is_bundle: false
@@ -23,8 +24,14 @@ doctrine:
 when@test:
     doctrine:
         dbal:
-            # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            dbname: 'todoandco_test'
+            driver: 'pdo_mysql'
+            host: '127.0.0.1'
+            port: 3306
+            user: 'root'
+            password: ''
+            charset: utf8mb4
+            
 
 when@prod:
     doctrine:

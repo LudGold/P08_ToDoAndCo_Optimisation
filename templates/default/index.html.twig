@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
+{% block css %}
+	<!-- Custom CSS -->
+		<link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
+{% endblock %}
 
-{% block header_title %}
-	<h1>Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h1>
+{% block meta_description %}
+    Bienvenue sur l'application Todo List, un outil simple et pratique pour gérer toutes vos tâches efficacement !
 {% endblock %}
 
 {% block body %}

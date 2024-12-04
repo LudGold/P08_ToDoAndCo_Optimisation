@@ -1,15 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
+{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.webp') }}" alt="todo list" loading="lazy" width="800" height="600">
 {% endblock %}
 
 {% block body %}
 	 {# doublon  #}
     {# <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>   #}
 	<div class="container-fluid">
+	<h1>{{ title }}</h1>
 		{% for task in tasks %}
 			<div class="col-sm-4 col-lg-4 col-md-4">
-				<div class="thumbnail">
+				<div class="thumbnail {% if not task.isDone %}task-todo{% endif %}">
 					<div class="caption">
 						<h4 class="pull-right">
 							{% if task.isDone %}

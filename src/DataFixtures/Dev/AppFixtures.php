@@ -1,9 +1,13 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Dev;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+
+/**
+ * @codeCoverageIgnore
+ */
 
 class AppFixtures extends Fixture
 {

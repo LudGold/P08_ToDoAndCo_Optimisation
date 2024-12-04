@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserType extends AbstractType
 {
@@ -48,11 +49,16 @@ class UserType extends AbstractType
                 'required' => !$options['is_edit'], // Pas obligatoire si en édition
                 'disabled' => !$isSelfEdit && $isAdmin, // Désactive le champ si admin
                 'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'form-control']],
+                'constraints' => [
+                new Assert\NotBlank(),
+                new Assert\Length(['min' => 6]),
+            ],
                 'second_options' => ['label' => 'Répéter le mot de passe', 'attr' => ['class' => 'form-control']],
+                'constraints' => [new Assert\NotBlank()],
             ]);
 
         // Si l'utilisateur connecté est admin, il peut modifier le rôle
-        if ($isAdmin && $isSelfEdit) {
+        if ($isAdmin && !$isSelfEdit) {
             $builder->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
@@ -77,7 +83,7 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'is_edit' => false,
-            'is_admin' => false, // Pour distinguer création/édition
+            'is_admin' => false,
             'is_self_edit' => false,
         ]);
     }

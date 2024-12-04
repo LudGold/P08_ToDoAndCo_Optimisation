@@ -1,4 +1,3 @@
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Réinitialisation du mot de passe{% endblock %}
@@ -12,7 +11,7 @@
             {{ form_widget(resetForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(resetForm.plainPassword) }}
         </div>
-        
+
       <button class="btn btn-primary">Réinitialiser mon mot de passe</button>
     {{ form_end(resetForm) }}
 
