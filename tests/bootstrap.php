@@ -3,22 +3,25 @@
 use Symfony\Component\Dotenv\Dotenv;
 
 // Charger l'autoloader de Composer
-$autoloadFile = __DIR__ . '/../vendor/autoload.php';
-if (!is_file($autoloadFile)) {
+// Charger l'autoloader de Composer
+$autoloadFile = realpath(__DIR__.'/../vendor/autoload.php');
+if (!$autoloadFile || !file_exists($autoloadFile)) {
     throw new RuntimeException('Le fichier autoload.php est manquant.');
 }
-require $autoloadFile;
+require_once $autoloadFile;
 
 // Vérifier et charger le fichier bootstrap
-$bootstrapFile = __DIR__ . '/../config/bootstrap.php';
-if (is_file($bootstrapFile)) {
-    require $bootstrapFile;
+$bootstrapFile = realpath(__DIR__.'/../config/bootstrap.php');
+if ($bootstrapFile && file_exists($bootstrapFile)) {
+    require_once $bootstrapFile;
+} else {
+    throw new RuntimeException('Le fichier bootstrap.php est manquant ou inaccessible.');
 }
 
 // Charger les variables d'environnement
-$envFile = __DIR__ . '/../.env';
-if (is_file($envFile)) {
+$envFile = realpath(__DIR__.'/../.env');
+if ($envFile && file_exists($envFile)) {
     (new Dotenv())->bootEnv($envFile);
 } else {
-    throw new RuntimeException('Le fichier .env est manquant.');
+    throw new RuntimeException('Le fichier .env est manquant ou inaccessible.');
 }

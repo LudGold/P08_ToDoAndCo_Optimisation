@@ -32,7 +32,9 @@ class AssignAnonymousUserToTaskCommand extends Command
     {
         $this->setDescription('Assigner l\'utilisateur "anonyme" à toutes les tâches sans auteur.');
     }
-    public function execute(InputInterface $input, OutputInterface $output): int{
+
+    public function execute(InputInterface $input, OutputInterface $output): int
+    {
         $io = new SymfonyStyle($input, $output);
 
         // Récupérer l'utilisateur anonyme
@@ -40,6 +42,7 @@ class AssignAnonymousUserToTaskCommand extends Command
 
         if (!$anonymousUser) {
             $io->error('L\'utilisateur "anonyme" n\'existe pas. Exécutez les fixtures d\'abord.');
+
             return Command::FAILURE;
         }
 

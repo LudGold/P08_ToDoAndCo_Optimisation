@@ -2,24 +2,17 @@
 
 namespace App\tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Entity\User;
 use App\DataFixtures\Test\AppTestFixtures;
-use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\BrowserKit\Cookie as BrowserKitCookie;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
 
 class UserControllerTest extends WebTestCase
 {
     private $client;
     private $entityManager;
     private $userRepository;
-
 
     protected function setUp(): void
     {
@@ -97,9 +90,10 @@ class UserControllerTest extends WebTestCase
         $this->assertNotNull($user);
         $this->assertEquals(['ROLE_USER'], $user->getRoles(), 'The user should have the ROLE_USER role');
     }
-    public function testListActionForAdmin()
-    // Récupérer un utilisateur administrateur (supposons que les fixtures aient ajouté un admin)
-    { 
+
+    public function testListActionForAdmin(): void
+    {
+        // Récupérer un utilisateur administrateur (supposons que les fixtures aient ajouté un admin)
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'admin']);
         $this->assertNotNull($user, 'Un utilisateur admin doit exister dans la base de données.');
 
@@ -108,49 +102,48 @@ class UserControllerTest extends WebTestCase
         // Simuler une requête GET vers la liste des utilisateurs
         $crawler = $this->client->request('GET', '/admin/users');
 
-        // // Vérifier que la table d'utilisateurs existe
+        // Vérifier que la table d'utilisateurs existe
         $this->assertSelectorExists('table.table');
 
         // Vérifier qu'il y a bien des utilisateurs dans la table
         $this->assertGreaterThan(0, $crawler->filter('tbody tr')->count(), 'La table doit contenir des utilisateurs.');
     }
 
-public function testUserCanEditOwnProfile(): void
-{
-    // Récupérer un utilisateur standard depuis les fixtures
-    $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'user']);
-    $this->assertNotNull($user, 'Un utilisateur de test doit exister dans la base de données.');
+    public function testUserCanEditOwnProfile(): void
+    {
+        // Récupérer un utilisateur standard depuis les fixtures
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'user']);
+        $this->assertNotNull($user, 'Un utilisateur de test doit exister dans la base de données.');
 
-    // Connecter l'utilisateur
-    $this->client->loginUser($user);
+        // Connecter l'utilisateur
+        $this->client->loginUser($user);
 
-    // Simuler une requête GET vers la page d'édition de son propre profil
-    $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        // Simuler une requête GET vers la page d'édition de son propre profil
+        $crawler = $this->client->request('GET', '/users/'.$user->getId().'/edit');
 
-    // Vérifier que la page d'édition est accessible
-    $this->assertResponseIsSuccessful();
-    $this->assertSelectorExists('form[name="user"]');
-   
-    // Soumettre le formulaire avec de nouvelles données
-    $form = $crawler->selectButton('Modifier mon profil')->form([
-        'user[email]' => 'newemail@example.com',
-        'user[password][first]' => 'NewPassword123!',
-        'user[password][second]' => 'NewPassword123!',
-    ]);
+        // Vérifier que la page d'édition est accessible
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form[name="user"]');
 
-    $this->client->submit($form);
+        // Soumettre le formulaire avec de nouvelles données
+        $form = $crawler->selectButton('Modifier mon profil')->form([
+            'user[email]' => 'newemail@example.com',
+            'user[password][first]' => 'NewPassword123!',
+            'user[password][second]' => 'NewPassword123!',
+        ]);
 
-    // Vérifier la redirection après la modification
-    $this->assertResponseRedirects('/');
+        $this->client->submit($form);
 
-    // Suivre la redirection et vérifier le message de succès
-    $this->client->followRedirect();
-    $this->assertSelectorTextContains('.alert-success', 'Votre profil a été mis à jour.');
+        // Vérifier la redirection après la modification
+        $this->assertResponseRedirects('/');
 
-    // Vérifier que les modifications sont bien dans la base de données
-    $updatedUser = $this->userRepository->findOneBy(['email' => 'newemail@example.com']);
-    $this->assertNotNull($updatedUser);
-    $this->assertEquals($user->getId(), $updatedUser->getId());
-}
+        // Suivre la redirection et vérifier le message de succès
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('.alert-success', 'Votre profil a été mis à jour.');
 
+        // Vérifier que les modifications sont bien dans la base de données
+        $updatedUser = $this->userRepository->findOneBy(['email' => 'newemail@example.com']);
+        $this->assertNotNull($updatedUser);
+        $this->assertEquals($user->getId(), $updatedUser->getId());
+    }
 }

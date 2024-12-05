@@ -4,7 +4,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 // Chargez l'autoloader
-$loaderPath = __DIR__ . '/../app/autoload.php';
+$loaderPath = __DIR__.'/../app/autoload.php';
 if (!is_file($loaderPath)) {
     throw new RuntimeException('The autoload file is missing.');
 }
@@ -20,12 +20,13 @@ $clientIp = $request->getClientIp();
 if (
     $request->server->has('HTTP_CLIENT_IP')
     || $request->server->has('HTTP_X_FORWARDED_FOR')
-    || ($clientIp && !in_array($clientIp, $allowedIps) && php_sapi_name() !== 'cli-server')
+    || ($clientIp && !in_array($clientIp, $allowedIps) && 'cli-server' !== php_sapi_name())
 ) {
     $response = new Response(
         'You are not allowed to access this file.',
         Response::HTTP_FORBIDDEN
     );
     $response->send();
+
     return;
 }

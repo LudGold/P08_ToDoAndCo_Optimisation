@@ -13,11 +13,13 @@ class SecurityControllerTest extends WebTestCase
         parent::setUp();
         $this->client = static::createClient();
     }
+
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
     }
+
     public function testLoginPage()
     {
         // Simule une requête GET vers la page de login

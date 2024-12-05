@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\User;
 use App\Entity\Task;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
@@ -66,6 +66,7 @@ class UserTest extends TestCase
 
         $this->assertCount(0, $violations);
     }
+
     public function testEraseCredentials()
     {
         $user = new User();
@@ -90,6 +91,4 @@ class UserTest extends TestCase
         $this->assertCount(1, $user->getTasks());
         $this->assertContains($task, $user->getTasks());
     }
- 
 }
-

@@ -3,29 +3,26 @@
 namespace App\tests\DataFixtures;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\StringInput;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DataFixtureTestCase extends WebTestCase
 {
-    /** @var Application $application */
+    /** @var Application */
     protected static $application;
 
-    /** @var KernelBrowser $client */
+    /** @var KernelBrowser */
     protected $client;
-    
-    /** @var ContainerInterface $containerTest */
+
+    /** @var ContainerInterface */
     protected $containerTest;
 
-    /** @var EntityManagerInterface $entityManager */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * {@inheritDoc}
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -43,16 +40,17 @@ class DataFixtureTestCase extends WebTestCase
     }
 
     /**
-     * Exécuter une commande Symfony
+     * Exécuter une commande Symfony.
      */
     protected static function runCommand($command)
     {
         $command = sprintf('%s --quiet', $command);
+
         return self::getApplication()->run(new StringInput($command));
     }
 
     /**
-     * Obtenir l'application Symfony
+     * Obtenir l'application Symfony.
      */
     protected static function getApplication()
     {
@@ -65,9 +63,6 @@ class DataFixtureTestCase extends WebTestCase
         return self::$application;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function tearDown(): void
     {
         // Supprimer la base de données après chaque test

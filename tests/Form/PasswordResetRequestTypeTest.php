@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 class PasswordResetRequestTypeTest extends KernelTestCase
 {
     private $formFactory;
+
     protected function setUp(): void
     {
         // Démarrer le kernel

@@ -2,13 +2,11 @@
 
 namespace App\tests\Controller;
 
-
 use App\Entity\Task;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
 
 class TaskControllerTest extends WebTestCase
 {
@@ -26,6 +24,7 @@ class TaskControllerTest extends WebTestCase
         // Charger les fixtures
         $this->loadFixtures();
     }
+
     private function loadFixtures(): void
     {
         // Nettoyer la base
@@ -82,7 +81,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->loginUser($user);
         // Simule une requête GET vers le formulaire de création de tâche
         $crawler = $this->client->request('GET', '/tasks/create');
-        
+
         // Vérifie que la réponse HTTP est bien 200 OK
         $this->assertResponseStatusCodeSame(200);
 
@@ -120,7 +119,7 @@ class TaskControllerTest extends WebTestCase
         // S'assurer qu'une tâche a bien été trouvée
         $this->assertNotNull($task, 'Aucune tâche trouvée pour cet utilisateur.');
         // Simule une requête GET vers le formulaire d'édition de la tâche
-        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/edit');
+        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
 
         // Vérifie que la réponse HTTP est bien 200 OK
         $this->assertResponseStatusCodeSame(200);
@@ -150,74 +149,70 @@ class TaskControllerTest extends WebTestCase
     {
         // Récupérer un utilisateur existant (par exemple via les fixtures)
         $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
-        
+
         // Simuler l'authentification de cet utilisateur
         $this->client->loginUser($user);
-    
+
         // Suppose qu'il y a une tâche existante
         $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => $user]);
-    
+
         // Assure-toi que la tâche n'est pas encore terminée au départ
         $this->assertFalse($task->isDone(), 'La tâche est initialement non terminée.');
-    
+
         // Simule la requête POST pour basculer l'état d'une tâche avec un token CSRF
-        $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('toggle' . $task->getId())->getValue();
-        $this->client->request('POST', '/tasks/' . $task->getId() . '/toggle', [
-            '_token' => $csrfToken
+        $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('toggle'.$task->getId())->getValue();
+        $this->client->request('POST', '/tasks/'.$task->getId().'/toggle', [
+            '_token' => $csrfToken,
         ]);
-    
+
         // Vérifie que la réponse est bien une redirection vers la liste des tâches
         $this->assertResponseRedirects('/tasks');
-    
+
         // Suivre la redirection
         $crawler = $this->client->followRedirect();
-    
+
         // Récupérer à nouveau la tâche pour vérifier son nouvel état
         $updatedTask = $this->entityManager->getRepository(Task::class)->find($task->getId());
         $this->assertTrue($updatedTask->isDone(), 'La tâche a bien été basculée en terminée.');
-    
-        
     }
-    
 
-//     public function testDeleteTaskAction(): void
-// {
-//     // Récupérer un utilisateur existant (par exemple via les fixtures)
-//     $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
-    
-//     $this->client->loginUser($user);
+    //     public function testDeleteTaskAction(): void
+    // {
+    //     // Récupérer un utilisateur existant (par exemple via les fixtures)
+    //     $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
 
-//     // Récupérer une tâche existante associée à cet utilisateur
-//     $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => $user]);
+    //     $this->client->loginUser($user);
 
-//     // Vérification que la tâche existe bien avant de continuer
-//     $this->assertNotNull($task, 'La tâche doit exister.');
-//     $this->assertNotNull($task->getId(), 'La tâche doit avoir un identifiant.');
+    //     // Récupérer une tâche existante associée à cet utilisateur
+    //     $task = $this->entityManager->getRepository(Task::class)->findOneBy(['author' => $user]);
 
-//     // Générer un token CSRF pour la suppression
-//     $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('delete' . $task->getId())->getValue();
+    //     // Vérification que la tâche existe bien avant de continuer
+    //     $this->assertNotNull($task, 'La tâche doit exister.');
+    //     $this->assertNotNull($task->getId(), 'La tâche doit avoir un identifiant.');
 
-//     // Simuler la requête POST pour supprimer la tâche
-//     $this->client->request('POST', '/tasks/' . $task->getId() . '/delete', [
-//         '_token' => $csrfToken
-//     ]);
+    //     // Générer un token CSRF pour la suppression
+    //     $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('delete' . $task->getId())->getValue();
 
-//     // Vérifier que la réponse est une redirection vers la liste des tâches
-//     $this->assertResponseRedirects('/tasks');
+    //     // Simuler la requête POST pour supprimer la tâche
+    //     $this->client->request('POST', '/tasks/' . $task->getId() . '/delete', [
+    //         '_token' => $csrfToken
+    //     ]);
 
-//     // Suivre la redirection
-//     $this->client->followRedirect();
+    //     // Vérifier que la réponse est une redirection vers la liste des tâches
+    //     $this->assertResponseRedirects('/tasks');
 
-//     // Vérifier que la tâche n'existe plus en base de données
-//     $deletedTask = $this->entityManager->getRepository(Task::class)->find($task->getId());
-//     $this->assertNull($deletedTask, 'La tâche a bien été supprimée de la base de données.');
+    //     // Suivre la redirection
+    //     $this->client->followRedirect();
 
-//     // Vérifier que le message flash de succès est affiché
-//     $this->assertSelectorExists('.alert-success');
-//     $this->assertSelectorTextContains('.alert-success', 'La tâche a bien été supprimée.');
-// }
+    //     // Vérifier que la tâche n'existe plus en base de données
+    //     $deletedTask = $this->entityManager->getRepository(Task::class)->find($task->getId());
+    //     $this->assertNull($deletedTask, 'La tâche a bien été supprimée de la base de données.');
 
-   
+    //     // Vérifier que le message flash de succès est affiché
+    //     $this->assertSelectorExists('.alert-success');
+    //     $this->assertSelectorTextContains('.alert-success', 'La tâche a bien été supprimée.');
+    // }
+
     public function testListDoneAction()
     {
         // Simuler la connexion d'un utilisateur, par exemple 'testuser'
@@ -233,6 +228,7 @@ class TaskControllerTest extends WebTestCase
         // Vérifier qu'au moins une tâche terminée est affichée avec l'icône "glyphicon-ok"
         $this->assertGreaterThan(0, $crawler->filter('.glyphicon-ok')->count(), 'Aucune tâche terminée trouvée.');
     }
+
     protected function tearDown(): void
     {
         parent::tearDown();

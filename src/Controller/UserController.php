@@ -5,22 +5,20 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Security\Core\Security;
-
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-
     /**
      * @Route("/admin/users", name="admin_user_list")
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function listAction(UserRepository $userRepository): Response
@@ -29,7 +27,7 @@ class UserController extends AbstractController
         $users = $userRepository->findAll();
 
         return $this->render('user/list.html.twig', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -60,7 +58,7 @@ class UserController extends AbstractController
             $logger->info('Un utilisateur a été créé', ['user_id' => $user->getId()]);
 
             // Message de confirmation
-            $this->addFlash('success', "Vous avez bien été ajouté.");
+            $this->addFlash('success', 'Vous avez bien été ajouté.');
 
             // Redirection vers la liste des utilisateurs
             return $this->redirectToRoute('app_homepage');
@@ -74,9 +72,8 @@ class UserController extends AbstractController
     /**
      *         @Route("/users/{id}/edit", name="app_user_edit")
      */
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger,  EntityManagerInterface $entityManager): Response
+    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger, EntityManagerInterface $entityManager): Response
     {
-
         // Modification d'un utilisateur
         $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);

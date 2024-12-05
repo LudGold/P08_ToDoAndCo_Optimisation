@@ -4,9 +4,9 @@ namespace App\tests\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 
 class UserRolesTestFixtures extends Fixture implements FixtureGroupInterface
 {

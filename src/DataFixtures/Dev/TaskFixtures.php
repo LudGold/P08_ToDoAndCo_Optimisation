@@ -11,7 +11,6 @@ use Faker\Factory;
 /**
  * @codeCoverageIgnore
  */
-
 class TaskFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
@@ -26,7 +25,7 @@ class TaskFixtures extends Fixture
         $manager->persist($anonymousUser);
 
         // Créer 10 tâches de démonstration
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $task = new Task();
             $task->setTitle($faker->sentence(3));
             $task->setContent($faker->paragraph());

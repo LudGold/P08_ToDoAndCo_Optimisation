@@ -107,6 +107,7 @@ class TaskController extends AbstractController
             $this->entityManager->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -131,7 +132,6 @@ class TaskController extends AbstractController
             $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
         }
 
-
         return $this->redirectToRoute('task_list');
     }
 
@@ -150,11 +150,12 @@ class TaskController extends AbstractController
         if ($task->getAuthor() !== $user && (!$isAdmin || $task->getAuthor() !== $anonymousUser)) {
             // Si l'utilisateur n'est pas l'auteur et que ce n'est pas un admin qui supprime une tâche anonyme
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette tâche.');
+
             return $this->redirectToRoute('task_list');
         }
 
         // Vérification du token CSRF
-        if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
             // Suppression de la tâche
             $entityManager->remove($task);
             $entityManager->flush();
@@ -184,6 +185,7 @@ class TaskController extends AbstractController
 
         return $this->render('task/list.html.twig', ['tasks' => $tasks, 'title' => 'Tâches à faire']);
     }
+
     /**
      * @Route("/tasks/done", name="task_list_done", methods={"GET"})
      */

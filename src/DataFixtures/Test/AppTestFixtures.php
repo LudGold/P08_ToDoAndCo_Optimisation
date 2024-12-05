@@ -7,9 +7,9 @@ namespace App\DataFixtures\Test;
 use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 
 class AppTestFixtures extends Fixture implements FixtureGroupInterface
 {
@@ -91,10 +91,10 @@ class AppTestFixtures extends Fixture implements FixtureGroupInterface
     private function loadTasks(ObjectManager $manager, User $user)
     {
         // Création de tâches pour les tests
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 5; ++$i) {
             $task = new Task();
-            $task->setTitle('Tâche de test ' . $i)
-                ->setContent('Ceci est la description de la tâche de test ' . $i)
+            $task->setTitle('Tâche de test '.$i)
+                ->setContent('Ceci est la description de la tâche de test '.$i)
                 ->setCreatedAt(new \DateTime())
                 ->setIsDone(false)
                 ->setAuthor($user);
@@ -103,10 +103,10 @@ class AppTestFixtures extends Fixture implements FixtureGroupInterface
         }
 
         // Création de quelques tâches terminées
-        for ($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; ++$i) {
             $task = new Task();
-            $task->setTitle('Tâche terminée ' . $i)
-                ->setContent('Ceci est une tâche terminée ' . $i)
+            $task->setTitle('Tâche terminée '.$i)
+                ->setContent('Ceci est une tâche terminée '.$i)
                 ->setCreatedAt(new \DateTime())
                 ->setIsDone(true)
                 ->setAuthor($user);

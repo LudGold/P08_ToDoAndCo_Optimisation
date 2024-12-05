@@ -1,7 +1,7 @@
 <?php
 
-$autoloadFile = __DIR__ . '/../app/autoload.php';
-$bootstrapFile = __DIR__ . '/../var/bootstrap.php.cache';
+$autoloadFile = __DIR__.'/../app/autoload.php';
+$bootstrapFile = __DIR__.'/../var/bootstrap.php.cache';
 
 // Vérifiez que le fichier autoload existe
 if (!is_file($autoloadFile)) {

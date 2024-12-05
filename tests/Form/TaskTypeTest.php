@@ -30,7 +30,7 @@ class TaskTypeTest extends KernelTestCase
         $this->user->setUsername('testUser');
         $this->user->setPassword('password123');
         $this->user->setEmail('test@test.com');
-        
+
         // Persister l'utilisateur
         $this->entityManager->persist($this->user);
         $this->entityManager->flush();
@@ -86,7 +86,7 @@ class TaskTypeTest extends KernelTestCase
     public function testEditMode()
     {
         $form = $this->formFactory->create(TaskType::class, $this->task, [
-            'is_edit' => true
+            'is_edit' => true,
         ]);
 
         $this->assertFalse($form->has('author'));
@@ -97,9 +97,9 @@ class TaskTypeTest extends KernelTestCase
     public function testDefaultOptions()
     {
         $form = $this->formFactory->create(TaskType::class, $this->task);
-        
+
         $options = $form->getConfig()->getOptions();
-        
+
         $this->assertEquals(Task::class, $options['data_class']);
         $this->assertFalse($options['is_edit']);
     }

@@ -1,14 +1,14 @@
 <?php
 
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Dotenv\Dotenv;
 
-// Chargez les variables d'environnement de manière sécurisée
-require_once realpath(__DIR__ . '/../vendor/autoload.php');
+// Chargez les variables d'environnement
+require_once __DIR__.'/../vendor/autoload.php';
 
 $dotenv = new Dotenv();
-$dotenv->bootEnv(realpath(__DIR__ . '/../.env'));
+$dotenv->bootEnv(__DIR__.'/../.env');
 
 // Créez une requête à partir des superglobales
 $request = Request::createFromGlobals();
@@ -20,6 +20,7 @@ if (!$request->server->has('HTTP_HOST')) {
         Response::HTTP_FORBIDDEN
     );
     $response->send();
+
     return;
 }
 
@@ -32,32 +33,34 @@ if ($clientIp && !in_array($clientIp, $allowedIps)) {
         Response::HTTP_FORBIDDEN
     );
     $response->send();
+
     return;
 }
 
 // Chargez les exigences Symfony
-$requirementsFile = realpath(__DIR__ . '/../var/SymfonyRequirements.php');
-if ($requirementsFile && is_file($requirementsFile)) {
-    require_once $requirementsFile;
+$requirementsPath = __DIR__.'/../var/SymfonyRequirements.php';
+if (file_exists($requirementsPath)) {
+    require_once $requirementsPath;
 } else {
     $response = new Response(
         'Symfony requirements file is missing.',
         Response::HTTP_INTERNAL_SERVER_ERROR
     );
     $response->send();
+
     return;
 }
 
 // Préparez les problèmes (exemple simulé ici, remplacez avec votre logique réelle)
 $problems = [
-    (object)[
-        'getTestMessage' => fn() => 'Test message 1',
-        'getHelpHtml' => fn() => 'Help message 1'
+    (object) [
+        'getTestMessage' => fn () => 'Test message 1',
+        'getHelpHtml' => fn () => 'Help message 1',
     ],
-    (object)[
-        'getTestMessage' => fn() => 'Test message 2',
-        'getHelpHtml' => fn() => 'Help message 2'
-    ]
+    (object) [
+        'getTestMessage' => fn () => 'Test message 2',
+        'getHelpHtml' => fn () => 'Help message 2',
+    ],
 ];
 
 // Créez une réponse HTML sécurisée

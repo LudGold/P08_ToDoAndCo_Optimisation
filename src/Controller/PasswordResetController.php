@@ -2,16 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Form\PasswordResetRequestType;
-use App\Repository\UserRepository;
 use App\Form\ResetPasswordType;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PasswordResetController extends AbstractController
 {
@@ -49,7 +48,6 @@ class PasswordResetController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/reset-password/{token}", name="app_reset_password")
      */
@@ -60,6 +58,7 @@ class PasswordResetController extends AbstractController
 
         if (!$user || $user->isTokenExpired()) {
             $this->addFlash('danger', 'Le jeton de réinitialisation est invalide ou expiré.');
+
             return $this->redirectToRoute('app_forgot_password');
         }
 

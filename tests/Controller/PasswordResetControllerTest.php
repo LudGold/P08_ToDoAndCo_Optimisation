@@ -2,14 +2,12 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface; // Pour manipuler l'EntityManager
-use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase; // Pour manipuler l'EntityManager
 
 class PasswordResetControllerTest extends WebTestCase
 {
-
     public function testForgotPasswordRouteIsAccessible()
     {
         $client = static::createClient();
@@ -29,7 +27,7 @@ class PasswordResetControllerTest extends WebTestCase
         // Récupérer les services nécessaires
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $userRepository = $entityManager->getRepository(User::class);
-        $email = 'testuser_' . uniqid() . '@example.com';
+        $email = 'testuser_'.uniqid().'@example.com';
         // Créer un utilisateur avec un token valide
         $user = new User();
         $user->setUsername('testuser');
@@ -76,7 +74,7 @@ class PasswordResetControllerTest extends WebTestCase
         $client = static::createClient();
 
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $email = 'testuser_' . uniqid() . '@example.com';
+        $email = 'testuser_'.uniqid().'@example.com';
 
         // Créer un utilisateur avec un token valide
         $user = new User();

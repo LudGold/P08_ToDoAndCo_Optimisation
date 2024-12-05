@@ -2,13 +2,12 @@
 
 namespace App\tests\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 
 class DefaultControllerTest extends WebTestCase
 {
     private $client;
+
     public function testIndexPageForAnonymousUser(): void
     {
         // Crée un client de test
@@ -19,7 +18,5 @@ class DefaultControllerTest extends WebTestCase
 
         // Vérifie que la réponse HTTP est 200 OK
         $this->assertResponseStatusCodeSame(200);
-
-     
     }
 }
