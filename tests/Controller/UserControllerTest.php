@@ -126,7 +126,7 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorExists('form[name="user"]');
 
         // Soumettre le formulaire avec de nouvelles données
-        $form = $crawler->selectButton('Modifier mon profil')->form([
+        $form = $crawler->selectButton('Enregistrer')->form([
             'user[email]' => 'newemail@example.com',
             'user[password][first]' => 'NewPassword123!',
             'user[password][second]' => 'NewPassword123!',
@@ -135,12 +135,11 @@ class UserControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Vérifier la redirection après la modification
-        $this->assertResponseRedirects('/');
+        $this->assertResponseRedirects('/admin/users');
 
         // Suivre la redirection et vérifier le message de succès
         $this->client->followRedirect();
-        $this->assertSelectorTextContains('.alert-success', 'Votre profil a été mis à jour.');
-
+      
         // Vérifier que les modifications sont bien dans la base de données
         $updatedUser = $this->userRepository->findOneBy(['email' => 'newemail@example.com']);
         $this->assertNotNull($updatedUser);

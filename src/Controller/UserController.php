@@ -95,7 +95,7 @@ class UserController extends AbstractController
             $this->addFlash('success', "L'utilisateur a bien été modifié.");
 
             // Redirection vers la liste des utilisateurs
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('admin_user_list');
         }
 
         return $this->render('user/edit.html.twig', [

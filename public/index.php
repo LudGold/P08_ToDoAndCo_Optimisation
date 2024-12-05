@@ -1,12 +1,11 @@
 <?php
 
-use Symfony\Component\Filesystem\Path;
+use App\Kernel;
+use Symfony\Component\ErrorHandler\Debug;
+use Symfony\Component\HttpFoundation\Request;
 
-// Utilisation sécurisée de __DIR__
-$autoloadRuntimeFile = Path::canonicalize(__DIR__.'/../vendor/autoload_runtime.php');
+require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
-if (!file_exists($autoloadRuntimeFile)) {
-    throw new RuntimeException('Le fichier autoload_runtime.php est manquant.');
-}
-
-require_once $autoloadRuntimeFile;
+return function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};

@@ -3,7 +3,6 @@
 use Symfony\Component\Dotenv\Dotenv;
 
 // Charger l'autoloader de Composer
-// Charger l'autoloader de Composer
 $autoloadFile = realpath(__DIR__.'/../vendor/autoload.php');
 if (!$autoloadFile || !file_exists($autoloadFile)) {
     throw new RuntimeException('Le fichier autoload.php est manquant.');
@@ -11,7 +10,7 @@ if (!$autoloadFile || !file_exists($autoloadFile)) {
 require_once $autoloadFile;
 
 // Vérifier et charger le fichier bootstrap
-$bootstrapFile = realpath(__DIR__.'/../config/bootstrap.php');
+$bootstrapFile = realpath(__DIR__.'/../tests/bootstrap.php');
 if ($bootstrapFile && file_exists($bootstrapFile)) {
     require_once $bootstrapFile;
 } else {

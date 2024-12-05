@@ -5,10 +5,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 // Chargez les variables d'environnement
-require_once __DIR__.'/../vendor/autoload.php';
+$autoloadPath = realpath(__DIR__ . '/../vendor/autoload.php');
+if ($autoloadPath && is_readable($autoloadPath)) {
+    require_once $autoloadPath;
+} else {
+    throw new \RuntimeException('Autoload file not found or not readable');
+}
 
 $dotenv = new Dotenv();
-$dotenv->bootEnv(__DIR__.'/../.env');
+$dotenv->bootEnv(__DIR__ . '/../.env');
 
 // Créez une requête à partir des superglobales
 $request = Request::createFromGlobals();
@@ -38,9 +43,9 @@ if ($clientIp && !in_array($clientIp, $allowedIps)) {
 }
 
 // Chargez les exigences Symfony
-$requirementsPath = __DIR__.'/../var/SymfonyRequirements.php';
-if (file_exists($requirementsPath)) {
-    require_once $requirementsPath;
+$requirementsPath = __DIR__ . '/../var/SymfonyRequirements.php';
+if (is_readable($requirementsPath)) {
+    require_once realpath($requirementsPath);
 } else {
     $response = new Response(
         'Symfony requirements file is missing.',
@@ -54,12 +59,12 @@ if (file_exists($requirementsPath)) {
 // Préparez les problèmes (exemple simulé ici, remplacez avec votre logique réelle)
 $problems = [
     (object) [
-        'getTestMessage' => fn () => 'Test message 1',
-        'getHelpHtml' => fn () => 'Help message 1',
+        'getTestMessage' => fn() => 'Test message 1',
+        'getHelpHtml' => fn() => 'Help message 1',
     ],
     (object) [
-        'getTestMessage' => fn () => 'Test message 2',
-        'getHelpHtml' => fn () => 'Help message 2',
+        'getTestMessage' => fn() => 'Test message 2',
+        'getHelpHtml' => fn() => 'Help message 2',
     ],
 ];
 

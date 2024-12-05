@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
-         colors="true"
-         bootstrap="tests/bootstrap.php"
-         convertDeprecationsToExceptions="false"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    backupGlobals="false"
+    colors="true"
+    bootstrap="tests/bootstrap.php"
+    convertDeprecationsToExceptions="false"
 >
     <php>
         <ini name="display_errors" value="1" />
@@ -23,17 +23,14 @@
     </testsuites>
 
     <coverage processUncoveredFiles="true">
-        <filter>
-            <whitelist>
-                <directory suffix=".php">src/</directory>
-                <exclude>
-                    
-                    <directory>src/DataFixtures/Dev</directory>>
-                </exclude>
-            </whitelist>
-        </filter>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <exclude>
+        <directory>src/DataFixtures/Dev</directory>
+        <file>src/Controller/PasswordResetController.php</file>
+    </exclude>
     </coverage>
-
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>

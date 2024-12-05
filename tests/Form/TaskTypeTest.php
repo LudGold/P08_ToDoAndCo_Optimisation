@@ -79,8 +79,8 @@ class TaskTypeTest extends KernelTestCase
         $titleConfig = $form->get('title')->getConfig();
         $contentConfig = $form->get('content')->getConfig();
 
-        $this->assertEquals('wide-title', $titleConfig->getOption('attr')['class']);
-        $this->assertEquals('wide-textarea', $contentConfig->getOption('attr')['class']);
+        $this->assertEquals('wide-title, form-control', $titleConfig->getOption('attr')['class']);
+        $this->assertEquals('wide-textarea, form-control', $contentConfig->getOption('attr')['class']);
     }
 
     public function testEditMode()
