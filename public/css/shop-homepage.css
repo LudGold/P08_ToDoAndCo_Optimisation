@@ -5,7 +5,8 @@
  */
 
 body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-top: 70px;
+    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 }
 
 .slide-image {
@@ -40,12 +41,7 @@ body {
     padding-left: 10px;
     color: #d17581;
 }
-input#task_title {
-    width: 100%!important;
-}
-textarea#task_content {
-    width: 100%!important;
-}
+
 .thumbnail {
     padding: 0;
 }

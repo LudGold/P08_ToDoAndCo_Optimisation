@@ -36,12 +36,12 @@ class UserType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
                 'attr' => ['class' => 'form-control'],
-                'disabled' => !$isSelfEdit && $isAdmin, // Désactive le champ si admin
+                'disabled' => !$isSelfEdit && $isAdmin && !$isUserConnected,// Désactive le champ si admin
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'attr' => ['class' => 'form-control'],
-                'disabled' => !$isSelfEdit && $isAdmin, // Désactive le champ si admin
+                'disabled' => !$isSelfEdit && $isAdmin && !$isUserConnected, // Désactive le champ si admin
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,

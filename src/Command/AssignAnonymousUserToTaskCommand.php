@@ -18,8 +18,16 @@ class AssignAnonymousUserToTaskCommand extends Command
      */
     protected static $defaultName = 'app:assign-anonymous-to-tasks';
 
+    /**
+     * @var TaskRepository
+     */
     private $taskRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
+
 
     public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
     {
@@ -37,7 +45,7 @@ class AssignAnonymousUserToTaskCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        // Récupérer l'utilisateur anonyme
+        // Récupérer l'utilisateur anonyme.
         $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
 
         if (!$anonymousUser) {
@@ -46,14 +54,14 @@ class AssignAnonymousUserToTaskCommand extends Command
             return Command::FAILURE;
         }
 
-        // Récupérer toutes les tâches sans auteur
+        // Récupérer toutes les tâches sans auteur.
         $tasksWithoutAuthor = $this->taskRepository->findBy(['author' => null]);
 
         foreach ($tasksWithoutAuthor as $task) {
             $task->setAuthor($anonymousUser);
         }
 
-        // Sauvegarder les modifications
+        // Sauvegarder les modifications.
         $this->entityManager->flush();
 
         $io->success('Toutes les tâches sans auteur ont été assignées à l\'utilisateur anonyme.');

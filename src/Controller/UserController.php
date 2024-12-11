@@ -20,10 +20,14 @@ class UserController extends AbstractController
      * @Route("/admin/users", name="admin_user_list")
      *
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @param UserRepository $userRepository
+     * 
+     * @return Response
      */
     public function listAction(UserRepository $userRepository): Response
     {
-        // Récupérer tous les utilisateurs
+        // Récupérer tous les utilisateurs.
         $users = $userRepository->findAll();
 
         return $this->render('user/list.html.twig', [
@@ -33,6 +37,13 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/create", name="app_user_create")
+     *
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param LoggerInterface $logger
+     * @param EntityManagerInterface $entityManager
+     * 
+     * @return Response
      */
     public function createAction(Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger, EntityManagerInterface $entityManager): Response
     {
@@ -41,26 +52,26 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        // Validation du formulaire
+        // Validation du formulaire.
         if ($form->isSubmitted() && $form->isValid()) {
-            // Ajoute ROLE_USER par défaut à chaque création d'utilisateur
+            // Ajoute ROLE_USER par défaut à chaque création d'utilisateur.
             $user->setRoles(array_unique(array_merge($user->getRoles(), ['ROLE_USER'])));
 
-            // Encodage du mot de passe
+            // Encodage du mot de passe.
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
 
-            // Sauvegarde de l'utilisateur dans la base de données
+            // Sauvegarde de l'utilisateur dans la base de données.
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Log de la création de l'utilisateur
+            // Log de la création de l'utilisateur.
             $logger->info('Un utilisateur a été créé', ['user_id' => $user->getId()]);
 
-            // Message de confirmation
+            // Message de confirmation.
             $this->addFlash('success', 'Vous avez bien été ajouté.');
 
-            // Redirection vers la liste des utilisateurs
+            // Redirection vers la liste des utilisateurs.
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -70,16 +81,25 @@ class UserController extends AbstractController
     }
 
     /**
-     *         @Route("/users/{id}/edit", name="app_user_edit")
+     * @Route("/users/{id}/edit", name="app_user_edit")
+     *
+     * @param User $user
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param LoggerInterface $logger
+     * @param EntityManagerInterface $entityManager
+     * 
+     * @return Response
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher, LoggerInterface $logger, EntityManagerInterface $entityManager): Response
     {
-        // Modification d'un utilisateur
+        // Modification d'un utilisateur.
         $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
-        // Validation et traitement du formulaire
+
+        // Validation et traitement du formulaire.
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe si nécessaire
+            // Encodage du mot de passe si nécessaire.
             if ($user->getPassword()) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
                 $user->setPassword($hashedPassword);
@@ -88,13 +108,13 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Log de la modification de l'utilisateur
+            // Log de la modification de l'utilisateur.
             $logger->info('Un utilisateur a été modifié', ['user_id' => $user->getId()]);
 
-            // Message de confirmation
+            // Message de confirmation.
             $this->addFlash('success', "L'utilisateur a bien été modifié.");
 
-            // Redirection vers la liste des utilisateurs
+            // Redirection vers la liste des utilisateurs.
             return $this->redirectToRoute('admin_user_list');
         }
 

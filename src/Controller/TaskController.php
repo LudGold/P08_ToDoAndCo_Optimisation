@@ -14,8 +14,16 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * Constructor
+     *
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -23,20 +31,22 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks", name="task_list", methods={"GET"})
+     *
+     * @return Response
      */
     public function listAction(): Response
     {
-        // Récupère l'utilisateur actuellement connecté
+        // Récupère l'utilisateur actuellement connecté.
         $user = $this->getUser();
-        // Récupère l'utilisateur "anonyme" pour le rôle admin
+        // Récupère l'utilisateur "anonyme" pour le rôle admin.
         $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
 
-        // Vérifie si l'utilisateur est administrateur
+        // Vérifie si l'utilisateur est administrateur.
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-        // Si l'utilisateur est admin, récupérer les tâches de l'utilisateur connecté + de l'utilisateur "anonyme"
+        // Si l'utilisateur est admin, récupérer les tâches de l'utilisateur connecté + de l'utilisateur "anonyme".
         if ($isAdmin) {
-            // Récupérer les tâches soit de l'utilisateur connecté soit de l'utilisateur anonyme
+            // Récupérer les tâches soit de l'utilisateur connecté soit de l'utilisateur anonyme.
             $tasks = $this->entityManager->getRepository(Task::class)->createQueryBuilder('t')
                 ->where('t.author = :user OR t.author = :anonymous')
                 ->setParameter('user', $user)
@@ -44,7 +54,7 @@ class TaskController extends AbstractController
                 ->getQuery()
                 ->getResult();
         } else {
-            // Si l'utilisateur n'est pas admin, ne récupérer que ses propres tâches
+            // Si l'utilisateur n'est pas admin, ne récupérer que ses propres tâches.
             $tasks = $this->entityManager->getRepository(Task::class)->findBy(['author' => $user]);
         }
 
@@ -56,11 +66,16 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/create", name="task_create", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Security $security
+     * 
+     * @return Response
      */
     public function createAction(Request $request, Security $security): Response
     {
         $task = new Task();
-        // Récupérer l'utilisateur connecté
+        // Récupérer l'utilisateur connecté.
         $user = $this->getUser();
         $task->setAuthor($user);
 
@@ -88,15 +103,20 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit", methods={"GET", "POST"})
+     *
+     * @param Task $task
+     * @param Request $request
+     * 
+     * @return Response
      */
     public function editAction(Task $task, Request $request): Response
     {
         $user = $this->getUser();
         if ($task->getAuthor() !== $user) {
-            // Ajouter un message flash
+            // Ajouter un message flash.
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à modifier cette tâche.');
 
-            // Rediriger vers la liste des tâches de l'utilisateur
+            // Rediriger vers la liste des tâches de l'utilisateur.
             return $this->redirectToRoute('task_list');
         }
         $form = $this->createForm(TaskType::class, $task, ['is_edit' => true]);
@@ -119,13 +139,17 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle", methods={"POST"})
+     *
+     * @param Task $task
+     * 
+     * @return Response
      */
     public function toggleTaskAction(Task $task): Response
     {
         $task->toggle(!$task->isDone());
         $this->entityManager->flush();
 
-        // Vérification de l'état pour afficher le message approprié
+        // Vérification de l'état pour afficher le message approprié.
         if ($task->isDone()) {
             $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
         } else {
@@ -137,32 +161,38 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete", methods={"GET", "POST"})
+     *
+     * @param Task $task
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * 
+     * @return Response
      */
     public function deleteTaskAction(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-        // Récupérer l'utilisateur "anonyme" pour la comparaison
+        // Récupérer l'utilisateur "anonyme" pour la comparaison.
         $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
 
-        // Vérification des autorisations de suppression
+        // Vérification des autorisations de suppression.
         if ($task->getAuthor() !== $user && (!$isAdmin || $task->getAuthor() !== $anonymousUser)) {
-            // Si l'utilisateur n'est pas l'auteur et que ce n'est pas un admin qui supprime une tâche anonyme
+            // Si l'utilisateur n'est pas l'auteur et que ce n'est pas un admin qui supprime une tâche anonyme.
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette tâche.');
 
             return $this->redirectToRoute('task_list');
         }
 
-        // Vérification du token CSRF
+        // Vérification du token CSRF.
         if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
-            // Suppression de la tâche
+            // Suppression de la tâche.
             $entityManager->remove($task);
             $entityManager->flush();
 
             $this->addFlash('success', 'La tâche a bien été supprimée.');
         } else {
-            // Si le token CSRF est invalide
+            // Si le token CSRF est invalide.
             $this->addFlash('error', 'Le token CSRF est invalide.');
         }
 
@@ -171,13 +201,15 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/todo", name="task_list_todo", methods={"GET"})
+     *
+     * @return Response
      */
     public function listTodoAction(): Response
     {
-        // Récupère l'utilisateur actuellement connecté
+        // Récupère l'utilisateur actuellement connecté.
         $user = $this->getUser();
 
-        // Récupère les tâches non terminées pour l'utilisateur connecté
+        // Récupère les tâches non terminées pour l'utilisateur connecté.
         $tasks = $this->entityManager->getRepository(Task::class)->findBy([
             'author' => $user,
             'isDone' => false,
@@ -188,13 +220,15 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/done", name="task_list_done", methods={"GET"})
+     *
+     * @return Response
      */
     public function listDoneAction(): Response
     {
-        // Récupère l'utilisateur actuellement connecté
+        // Récupère l'utilisateur actuellement connecté.
         $user = $this->getUser();
 
-        // Récupère les tâches terminées pour l'utilisateur connecté
+        // Récupère les tâches terminées pour l'utilisateur connecté.
         $tasks = $this->entityManager->getRepository(Task::class)->findBy([
             'author' => $user,
             'isDone' => true,

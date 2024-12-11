@@ -16,23 +16,29 @@ class PasswordResetController extends AbstractController
 {
     /**
      * @Route("/forgot-password", name="app_forgot_password")
+     *
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param EntityManagerInterface $entityManager
+     * 
+     * @return Response
      */
     public function forgotPassword(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
-        // Formulaire pour entrer le nom d'utilisateur ou l'identifiant unique
+        // Formulaire pour entrer le nom d'utilisateur ou l'identifiant unique.
         $form = $this->createForm(PasswordResetRequestType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $user = $userRepository->findOneBy(['username' => $data['username']]); // Recherche par nom d'utilisateur
+            $user = $userRepository->findOneBy(['username' => $data['username']]); // Recherche par nom d'utilisateur.
 
             if ($user) {
-                // Génération d'un jeton unique et stockage dans la base de données
+                // Génération d'un jeton unique et stockage dans la base de données.
                 $token = bin2hex(random_bytes(32));
                 $user->setResetToken($token);
                 $user->setTokenExpiryDate(new \DateTime('+1 hour'));
-                // Durée de validité de 1 heure
+                // Durée de validité de 1 heure.
                 $entityManager->flush();
 
                 return $this->redirectToRoute('app_reset_password', ['token' => $token]);
@@ -50,31 +56,39 @@ class PasswordResetController extends AbstractController
 
     /**
      * @Route("/reset-password/{token}", name="app_reset_password")
+     *
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param string $token
+     * @param EntityManagerInterface $entityManager
+     * @param UserPasswordHasherInterface $passwordHasher
+     * 
+     * @return Response
      */
     public function resetPassword(Request $request, UserRepository $userRepository, string $token, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Recherche de l'utilisateur avec le jeton fourni
+        // Recherche de l'utilisateur avec le jeton fourni.
         $user = $userRepository->findOneBy(['resetToken' => $token]);
 
-        if (!$user || $user->isTokenExpired()) {
+        if (!$user || $user->isTokenExpired() === true) {
             $this->addFlash('danger', 'Le jeton de réinitialisation est invalide ou expiré.');
 
             return $this->redirectToRoute('app_forgot_password');
         }
 
-        // Formulaire pour entrer le nouveau mot de passe
+        // Formulaire pour entrer le nouveau mot de passe.
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $newPassword = $form->get('plainPassword')->getData();
 
-            // Encodage et mise à jour du mot de passe
+            // Encodage et mise à jour du mot de passe.
             $user->setPassword(
                 $passwordHasher->hashPassword($user, $newPassword)
             );
 
-            // Réinitialisation du jeton pour éviter sa réutilisation
+            // Réinitialisation du jeton pour éviter sa réutilisation.
             $user->setResetToken(null);
             $user->setTokenExpiryDate(null);
 

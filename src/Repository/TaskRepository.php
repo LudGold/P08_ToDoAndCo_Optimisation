@@ -16,25 +16,42 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TaskRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur de TaskRepository.
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Task::class);
     }
 
+    /**
+     * Ajoute une tâche à la base de données.
+     *
+     * @param Task $entity
+     * @param bool $flush
+     */
     public function add(Task $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
-        if ($flush) {
+        if ($flush === true) {
             $this->getEntityManager()->flush();
         }
     }
 
+    /**
+     * Supprime une tâche de la base de données.
+     *
+     * @param Task $entity
+     * @param bool $flush
+     */
     public function remove(Task $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
-        if ($flush) {
+        if ($flush === true) {
             $this->getEntityManager()->flush();
         }
     }

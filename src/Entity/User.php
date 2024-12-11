@@ -181,12 +181,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
         return $this;
     }
-
+ /**
+     * Récupère le token de réinitialisation du mot de passe.
+     *
+     * @return string|null
+     */
     public function getResetToken(): ?string
     {
         return $this->resetToken;
     }
 
+    /**
+     * Définit le token de réinitialisation du mot de passe.
+     *
+     * @param string|null $resetToken
+     * @return $this
+     */
     public function setResetToken(?string $resetToken): self
     {
         $this->resetToken = $resetToken;
@@ -194,11 +204,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
+    /**
+     * Récupère la date d'expiration du token de réinitialisation.
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getTokenExpiryDate(): ?\DateTimeInterface
     {
         return $this->tokenExpiryDate;
     }
 
+    /**
+     * Définit la date d'expiration du token de réinitialisation.
+     *
+     * @param \DateTimeInterface|null $tokenExpiryDate
+     * @return $this
+     */
     public function setTokenExpiryDate(?\DateTimeInterface $tokenExpiryDate): self
     {
         $this->tokenExpiryDate = $tokenExpiryDate;
@@ -206,8 +227,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
+    /**
+     * Vérifie si le token de réinitialisation est expiré.
+     *
+     * @return bool
+     */
     public function isTokenExpired(): bool
     {
-        return null === $this->getTokenExpiryDate() || $this->getTokenExpiryDate() < new \DateTime();
+        return $this->tokenExpiryDate <= new \DateTime();
     }
 }

@@ -16,25 +16,42 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur de UserRepository.
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * Ajoute un utilisateur à la base de données.
+     *
+     * @param User $entity
+     * @param bool $flush
+     */
     public function add(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
-        if ($flush) {
+        if ($flush === true) {
             $this->getEntityManager()->flush();
         }
     }
 
+    /**
+     * Supprime un utilisateur de la base de données.
+     *
+     * @param User $entity
+     * @param bool $flush
+     */
     public function remove(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
-        if ($flush) {
+        if ($flush === true) {
             $this->getEntityManager()->flush();
         }
     }
