@@ -1,0 +1,13 @@
+{# templates/bundles/TwigBundle/Exception/error.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur
+{% endblock %}
+
+{% block body %}
+	<h1>Oups ! Une erreur s'est produite.</h1>
+	<p>
+		Nous sommes désolés pour le désagrément. Veuillez réessayer plus tard.
+	</p>
+	<a href="{{ path('app_homepage') }}" class="btn btn-primary">Retour à l'accueil</a>
+{% endblock %}

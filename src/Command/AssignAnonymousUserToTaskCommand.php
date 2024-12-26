@@ -5,40 +5,26 @@ namespace App\Command;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:assign-anonymous-to-tasks',
+    description: 'Assigner l\'utilisateur "anonyme" à toutes les tâches sans auteur.'
+)]
 class AssignAnonymousUserToTaskCommand extends Command
 {
-    /**
-     * The name of the command to assign anonymous users to tasks.
-     * This is used to identify the command when running it via the CLI.
-     */
-    protected static $defaultName = 'app:assign-anonymous-to-tasks';
-
-    /**
-     * @var TaskRepository
-     */
     private $taskRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
-
 
     public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->taskRepository = $taskRepository;
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this->setDescription('Assigner l\'utilisateur "anonyme" à toutes les tâches sans auteur.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
