@@ -18,18 +18,18 @@ class ResetPasswordTypeTest extends KernelTestCase
         // Récupérer le form factory
         $this->formFactory = static::getContainer()->get(FormFactoryInterface::class);
     }
-
-    public function testSubmitValidData()
+// testons les contraintes
+    public function testSubmitEmptyPassword()
     {
         $formData = [
-            'plainPassword' => 'newpassword',
+            'plainPassword' => '',
         ];
 
         $form = $this->formFactory->create(ResetPasswordType::class);
         $form->submit($formData);
 
-        $this->assertTrue($form->isSynchronized());
-        $this->assertEquals('newpassword', $form->getData()['plainPassword']);
+        $this->assertFalse($form->isValid(), 'Le formulaire ne doit pas être valide avec un mot de passe vide.');
+        $this->assertEquals('Le mot de passe ne peut pas être vide.', $form->get('plainPassword')->getErrors()[0]->getMessage());
     }
 
     public function testFormFields()

@@ -29,8 +29,7 @@
         </include>
         <exclude>
         <directory>src/DataFixtures/Dev</directory>
-        <file>src/Controller/PasswordResetController.php</file>
-    </exclude>
+        </exclude>
     </coverage>
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />

@@ -19,7 +19,7 @@ class UserTestFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $user = new User();
-        $user->setUsername('test_user');
+        $user->setUsername('testuser');
         $user->setEmail('test@test.com');
         $user->setPassword(
             $this->passwordHasher->hashPassword($user, 'password')

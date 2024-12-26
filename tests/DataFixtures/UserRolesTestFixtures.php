@@ -17,7 +17,7 @@ class UserRolesTestFixtures extends Fixture implements FixtureGroupInterface
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager):void
     {
         // Utilisateur avec le rôle ROLE_USER
         $user = new User();

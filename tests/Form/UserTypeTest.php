@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class UserTypeTest extends KernelTestCase
 {
@@ -27,7 +27,7 @@ class UserTypeTest extends KernelTestCase
         $this->formFactory = static::getContainer()->get(FormFactoryInterface::class);
 
         // Récupérer le service de sécurité
-        $this->security = static::getContainer()->get(Security::class);
+        $this->security = $this->createMock(Security::class);
 
         // Créer un utilisateur de test
         $this->user = new User();
@@ -98,7 +98,7 @@ class UserTypeTest extends KernelTestCase
         $this->assertEquals('form-control', $passwordConfig->getOption('second_options')['attr']['class']);
     }
 
-    public function testEditMode()
+    public function testEditMode(): void
     {
         $form = $this->formFactory->create(UserType::class, $this->user, [
             'is_edit' => true,
@@ -106,13 +106,16 @@ class UserTypeTest extends KernelTestCase
             'is_self_edit' => false,
         ]);
 
+        // Vérifier les champs de base
         $this->assertTrue($form->has('username'));
         $this->assertTrue($form->has('email'));
         $this->assertTrue($form->has('password'));
-        $this->assertFalse($form->has('roles'));
+
+        // En mode édition non-admin, le champ roles ne devrait pas être présent
+        $this->assertFalse($form->has('roles'), 'Le champ roles ne devrait pas être présent pour un utilisateur non admin');
     }
 
-    public function testAdminMode()
+    public function testAdminMode(): void
     {
         $form = $this->formFactory->create(UserType::class, $this->user, [
             'is_edit' => true,
@@ -120,12 +123,16 @@ class UserTypeTest extends KernelTestCase
             'is_self_edit' => false,
         ]);
 
+        // Vérifier les champs de base
         $this->assertTrue($form->has('username'));
         $this->assertTrue($form->has('email'));
-        $this->assertTrue($form->has('password'));
-        $this->assertTrue($form->has('roles'));
-    }
+        $this->assertFalse($form->has('password'), 'Le champ password ne devrait pas être présent en mode admin');
 
+        // Vérifier le champ roles
+        $this->assertTrue($form->has('roles'), 'Le champ roles devrait être présent en mode admin');
+        $rolesField = $form->get('roles');
+        $this->assertFalse($rolesField->getConfig()->getDisabled(), 'Le champ roles devrait être actif pour un admin');
+    }
     public function testDefaultOptions()
     {
         $form = $this->formFactory->create(UserType::class, $this->user);

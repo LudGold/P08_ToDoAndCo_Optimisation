@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur 500 - Erreur interne du serveur
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-5">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h1 class="display-3">Erreur 500</h1>
+				<p class="lead">Désolé, une erreur interne du serveur s'est produite. Nous travaillons pour résoudre ce problème dès que possible.</p>
+				<a href="{{ path('app_homepage') }}" class="btn btn-primary mt-3">Retour à l'accueil</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

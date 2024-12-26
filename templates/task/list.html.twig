@@ -4,10 +4,9 @@
 {% endblock %}
 
 {% block body %}
-	 {# doublon  #}
-    {# <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>   #}
-	<div class="container-fluid">
-	<h1>{{ title }}</h1>
+	{# doublon  #}
+	{# <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>   #}
+		<div class="container-fluid"> <h1>{{ title }}</h1>
 		{% for task in tasks %}
 			<div class="col-sm-4 col-lg-4 col-md-4">
 				<div class="thumbnail {% if not task.isDone %}task-todo{% endif %}">
@@ -31,7 +30,8 @@
 								{% endif %}
 							</button>
 						</form>
-						<form method="post" action="{{ path('task_delete', {id: task.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette tâche ?');">
+						<form method="POST" action="{{ path('task_delete', {id: task.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette tâche ?');">
+							<input type="hidden" name="_method" value="DELETE">
 							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
 							<button class="btn btn-danger">Supprimer</button>
 						</form>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\tests\Controller;
+namespace App\ests\Controller;
 
 use App\DataFixtures\Test\AppTestFixtures;
 use App\Entity\User;
@@ -59,36 +59,30 @@ class UserControllerTest extends WebTestCase
 
     public function testCreateUser(): void
     {
-        // Simuler une requête GET pour accéder au formulaire de création
         $crawler = $this->client->request('GET', '/users/create');
 
-        // Vérifier que le formulaire est bien accessible
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('form[name="user"]');
 
-        // Soumettre le formulaire avec des données valides
-        $form = $crawler->selectButton('Ajouter')->form([
+        $form = $crawler->selectButton('Créer')->form([
             'user[username]' => 'TestUser',
             'user[email]' => 'test@example.com',
             'user[password][first]' => 'Password123!',
-            'user[password][second]' => 'Password123!',
+            'user[password][second]' => 'Password123!'
         ]);
+        
         $this->client->submit($form);
 
-        // Vérifier que la redirection est correcte
-        $this->assertResponseRedirects('/'); // Mettez ici la bonne route.
-
-        // Suivre la redirection
+        $this->assertResponseRedirects('/');
         $this->client->followRedirect();
 
-        // Vérifier que l'utilisateur a été créé avec succès
+        // Correction du message flash attendu
         $this->assertSelectorExists('.alert-success');
-        $this->assertSelectorTextContains('.alert-success', 'Vous avez bien été ajouté.');
+        $this->assertSelectorTextContains('.alert-success', 'Votre compte a été créé avec succès');
 
-        // Vérifiez que l'utilisateur est bien dans la base de données
         $user = $this->userRepository->findOneBy(['username' => 'TestUser']);
         $this->assertNotNull($user);
-        $this->assertEquals(['ROLE_USER'], $user->getRoles(), 'The user should have the ROLE_USER role');
+        $this->assertEquals(['ROLE_USER'], $user->getRoles());
     }
 
     public function testListActionForAdmin(): void
@@ -111,38 +105,34 @@ class UserControllerTest extends WebTestCase
 
     public function testUserCanEditOwnProfile(): void
     {
-        // Récupérer un utilisateur standard depuis les fixtures
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'user']);
-        $this->assertNotNull($user, 'Un utilisateur de test doit exister dans la base de données.');
+        // Trouver l'utilisateur
+        $user = $this->userRepository->findOneBy(['username' => 'user']);
+        $this->assertNotNull($user, 'L\'utilisateur "user" n\'a pas été trouvé');
 
-        // Connecter l'utilisateur
         $this->client->loginUser($user);
 
-        // Simuler une requête GET vers la page d'édition de son propre profil
-        $crawler = $this->client->request('GET', '/users/'.$user->getId().'/edit');
+        $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
 
-        // Vérifier que la page d'édition est accessible
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('form[name="user"]');
 
-        // Soumettre le formulaire avec de nouvelles données
-        $form = $crawler->selectButton('Enregistrer')->form([
+        // Correction des données du formulaire
+        $form = $crawler->selectButton('Modifier')->form([
+            'user[username]' => 'UpdatedUsername', // Nouveau username
             'user[email]' => 'newemail@example.com',
-            'user[password][first]' => 'NewPassword123!',
-            'user[password][second]' => 'NewPassword123!',
+            // Ne pas inclure le mot de passe si on ne veut pas le modifier
         ]);
 
         $this->client->submit($form);
 
-        // Vérifier la redirection après la modification
-        $this->assertResponseRedirects('/admin/users');
-
-        // Suivre la redirection et vérifier le message de succès
+        $this->assertResponseRedirects('/');
         $this->client->followRedirect();
-      
-        // Vérifier que les modifications sont bien dans la base de données
-        $updatedUser = $this->userRepository->findOneBy(['email' => 'newemail@example.com']);
-        $this->assertNotNull($updatedUser);
-        $this->assertEquals($user->getId(), $updatedUser->getId());
+
+        // Recharger l'utilisateur depuis la base
+        $this->entityManager->clear(); // Important pour recharger les données
+        $updatedUser = $this->userRepository->find($user->getId());
+
+        $this->assertEquals('UpdatedUsername', $updatedUser->getUsername());
+        $this->assertEquals('newemail@example.com', $updatedUser->getEmail());
     }
 }

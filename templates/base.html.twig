@@ -6,20 +6,17 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="{% block meta_description %}Bienvenue sur Todo List, gérez vos tâches facilement !{% endblock %}">
-
 		<meta name="author" content="OpenClassrooms">
-
 		<title>
 			{% block title %}To Do List app
 			{% endblock %}
 		</title>
 
-		<!-- Bootstrap Core CSS -->
-		<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-		{% block css %}
+		{% block stylesheets %}
+			<!-- Bootstrap Core CSS -->
+			<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 			<link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
 		{% endblock %}
-
 	</head>
 
 	<body>
@@ -27,7 +24,6 @@
 			<div class="container">
 				<div class="navbar-header">
 					<a class="navbar-brand" href="/">To Do List app</a>
-
 					<img src="{{ asset('img/Logo_OpenClassrooms.webp') }}" alt="OpenClassrooms" width="80" height="50"/>
 				</div>
 			</div>
@@ -39,8 +35,7 @@
 				<a href="{{ path('app_user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
 
 				{% if app.user %}
-					{# Afficher le bouton pour éditer le profil uniquement si l'utilisateur est connecté #}
-
+					<!-- Afficher le bouton pour éditer le profil uniquement si l'utilisateur est connecté -->
 					<a href="{{ path('app_user_edit', {id: app.user.id}) }}" class="btn btn-primary mt-3">Modifier mon profil</a>
 
 					<a href="{{ path('app_logout') }}" class="pull-right btn btn-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -56,14 +51,14 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					{% for flash_message in app.session.flashBag.get('success') %}
+					{% for flash_message in app.flashes('success') %}
 						<div class="alert alert-success" role="alert">
 							<strong>Superbe !</strong>
 							{{ flash_message }}
 						</div>
 					{% endfor %}
 
-					{% for flash_message in app.session.flashBag.get('error') %}
+					{% for flash_message in app.flashes('error') %}
 						<div class="alert alert-danger" role="alert">
 							<strong>Oops !</strong>
 							{{ flash_message }}
@@ -71,7 +66,8 @@
 					{% endfor %}
 
 					{% block header_title %}{% endblock %}
-					{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.webp') }}" alt="todo list" loading="lazy" width="800" height="600">
+					{% block header_img %}
+						<img class="slide-image" src="{{ asset('img/todolist_homepage.webp') }}" alt="todo list" loading="lazy" width="800" height="600">
 					{% endblock %}
 				</div>
 			</div>
@@ -85,7 +81,6 @@
 			<!-- /.container -->
 
 			<div class="container">
-
 				<hr>
 				<footer>
 					<div class="row">
@@ -94,11 +89,10 @@
 						</div>
 					</div>
 				</footer>
-
 			</div>
 
 			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 			<script src="{{ asset('js/bootstrap.min.js') }}"></script>
 		</body>
+
 	</html>
-</body></html>

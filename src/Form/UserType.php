@@ -10,58 +10,51 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class UserType extends AbstractType
 {
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $isUserConnected = null !== $this->security->getUser();
-        // Si l'utilisateur connecté est admin, désactiver certains champs
+        $isEdit = $options['is_edit'];
         $isAdmin = $options['is_admin'];
-        // si l'admin édite son propre profil
         $isSelfEdit = $options['is_self_edit'];
 
         $builder
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
                 'attr' => ['class' => 'form-control'],
-                'disabled' => !$isSelfEdit && $isAdmin && !$isUserConnected,// Désactive le champ si admin
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'attr' => ['class' => 'form-control'],
-                'disabled' => !$isSelfEdit && $isAdmin && !$isUserConnected, // Désactive le champ si admin
-            ])
-            ->add('password', RepeatedType::class, [
+            ]);
+
+        // Gestion du mot de passe
+        if (!$isAdmin) {
+            $builder->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'required' => !$options['is_edit'], // Pas obligatoire si en édition
-                'disabled' => !$isSelfEdit && $isAdmin, // Désactive le champ si admin
-                'first_options' => ['label' => 'Mot de passe', 'attr' => ['class' => 'form-control']],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(['min' => 6]),
+                'required' => !$isEdit,
+                'mapped' => !$isEdit, // Le mot de passe n'est mappé que pour la création
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'attr' => ['class' => 'form-control']
                 ],
-                'second_options' => ['label' => 'Répéter le mot de passe', 'attr' => ['class' => 'form-control']],
-                'constraints' => [new Assert\NotBlank()],
-            ])
-                ->add('submit', SubmitType::class, [
-                    'label' => 'Enregistrer',
-                    'attr' => ['class' => 'btn-submit'],
-                ]);
+                'second_options' => [
+                    'label' => 'Répéter le mot de passe',
+                    'attr' => ['class' => 'form-control']
+                ],
+            ]);
+        }
 
-        // Si l'utilisateur connecté est admin, il peut modifier le rôle
+        // Gestion des rôles (uniquement pour les admins)
         if ($isAdmin && !$isSelfEdit) {
             $builder->add('roles', ChoiceType::class, [
                 'choices' => [
@@ -74,15 +67,20 @@ class UserType extends AbstractType
                 'attr' => ['class' => 'form-check'],
             ]);
         }
+
+        $builder->add('submit', SubmitType::class, [
+            'label' => $isEdit ? 'Modifier' : 'Créer',
+            'attr' => ['class' => 'btn btn-primary mt-3'],
+        ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_self_edit' => false,
             'is_edit' => false,
             'is_admin' => false,
-            'is_self_edit' => false,
         ]);
     }
 }

@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PasswordResetRequestType extends AbstractType
 {
@@ -14,7 +15,15 @@ class PasswordResetRequestType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'Nom d\'utilisateur',
-            ]);
+                'constraints' => [
+            new NotBlank([
+                'message' => 'Ce champ est obligatoire.',
+            ]),
+        ],
+        'attr' => [
+            'placeholder' => 'Entrez votre nom d\'utilisateur', // Placeholder pour guider l'utilisateur
+        ],
+    ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

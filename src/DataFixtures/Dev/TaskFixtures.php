@@ -13,7 +13,7 @@ use Faker\Factory;
  */
 class TaskFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager):void
     {
         $faker = Factory::create('fr_FR');
 
@@ -21,7 +21,7 @@ class TaskFixtures extends Fixture
         $anonymousUser = new User();
         $anonymousUser->setUsername('anonyme');
         $anonymousUser->setEmail('anonyme@example.com');
-        $anonymousUser->setPassword(''); // Mot de passe vide ou crypté, selon tes besoins
+        $anonymousUser->setPassword(''); // Mot de passe vide ou crypté
         $manager->persist($anonymousUser);
 
         // Créer 10 tâches de démonstration

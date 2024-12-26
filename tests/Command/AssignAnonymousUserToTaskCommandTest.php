@@ -34,14 +34,15 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
     public function testConstruct(): void
     {
         $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
-
         $this->assertInstanceOf(AssignAnonymousUserToTaskCommand::class, $command);
+        $this->assertSame('app:assign-anonymous-to-tasks', $command->getName());
     }
 
-    public function testConfigure(): void
+    public function testCommandConfiguration(): void
     {
         $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
 
+        // Vérifie que la configuration via l'attribut AsCommand est correcte
         $this->assertSame('app:assign-anonymous-to-tasks', $command->getName());
         $this->assertSame(
             'Assigner l\'utilisateur "anonyme" à toutes les tâches sans auteur.',
@@ -56,17 +57,12 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
             ->willReturnCallback(function ($entityClass) {
                 if (User::class === $entityClass) {
                     return $this->createConfiguredMock(TaskRepository::class, [
-                        'findOneBy' => null, // Simule l'absence de l'utilisateur "anonyme"
+                        'findOneBy' => null,
                     ]);
                 }
             });
 
-        // Instanciation de la commande
         $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
-
-        // Testeur de commande
-        $application = new Application();
-        $application->add($command);
         $commandTester = new CommandTester($command);
 
         // Exécution de la commande
@@ -89,63 +85,13 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
         // Création d'une tâche sans auteur pour le test
         $taskWithoutAuthor = new Task();
 
-        // Configuration du TaskRepository (celui injecté dans la commande)
+        // Configuration du TaskRepository
         $this->taskRepository
             ->method('findBy')
             ->with(['author' => null])
             ->willReturn([$taskWithoutAuthor]);
 
-        // Configuration du mock de l'EntityManager pour retourner l'utilisateur anonyme
-        $userRepository = $this->createMock(\Doctrine\ORM\EntityRepository::class);
-        $userRepository->method('findOneBy')
-            ->with(['username' => 'anonyme'])
-            ->willReturn($anonymousUser);
-
-        $this->entityManager
-            ->method('getRepository')
-            ->with(User::class) // On précise qu'on attend User::class
-            ->willReturn($userRepository);
-
-        // On s'attend à ce que flush soit appelé une fois
-        $this->entityManager
-            ->expects($this->once())
-            ->method('flush');
-
-        // Instanciation de la commande
-        $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
-
-        // Création du testeur de commande
-        $application = new Application();
-        $application->add($command);
-        $commandTester = new CommandTester($command);
-
-        // Exécution de la commande
-        $commandTester->execute([]);
-
-        // Vérifications
-        $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
-        $this->assertStringContainsString(
-            'Toutes les tâches sans auteur ont été assignées',
-            $commandTester->getDisplay()
-        );
-    }
-
-    public function testExecuteSuccessCommand(): void
-    {
-        // Création de l'utilisateur anonyme
-        $anonymousUser = new User();
-        $anonymousUser->setUsername('anonyme');
-
-        // Création d'une tâche sans auteur
-        $taskWithoutAuthor = new Task();
-
-        // Configuration du TaskRepository pour retourner une tâche sans auteur
-        $this->taskRepository
-            ->method('findBy')
-            ->with(['author' => null])
-            ->willReturn([$taskWithoutAuthor]);
-
-        // Configuration du mock de l'EntityManager pour retourner l'utilisateur anonyme
+        // Configuration du mock de l'EntityManager
         $userRepository = $this->createMock(\Doctrine\ORM\EntityRepository::class);
         $userRepository->method('findOneBy')
             ->with(['username' => 'anonyme'])
@@ -156,17 +102,11 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
             ->with(User::class)
             ->willReturn($userRepository);
 
-        // On s'attend à ce que flush soit appelé une fois
         $this->entityManager
             ->expects($this->once())
             ->method('flush');
 
-        // Instanciation de la commande
         $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
-
-        // Testeur de commande
-        $application = new Application();
-        $application->add($command);
         $commandTester = new CommandTester($command);
 
         // Exécution de la commande
@@ -178,5 +118,6 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
             'Toutes les tâches sans auteur ont été assignées',
             $commandTester->getDisplay()
         );
+        $this->assertSame($anonymousUser, $taskWithoutAuthor->getAuthor());
     }
 }
