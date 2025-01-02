@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Security\Voter;
 
 use App\Entity\Task;
@@ -9,13 +10,12 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskVoter extends Voter
 {
-    public function __construct(private Security $security)
-    {
-    }
+    public function __construct(private Security $security) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === 'TASK_EDIT' && $subject instanceof Task;
+        return in_array($attribute, ['TASK_EDIT', 'TASK_DELETE'])
+            && $subject instanceof Task;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -28,12 +28,20 @@ class TaskVoter extends Voter
         /** @var Task $task */
         $task = $subject;
 
-        // Si c'est un admin, il peut tout éditer
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
+        switch ($attribute) {
+            case 'TASK_EDIT':
+                // Pour l'édition : admin peut tout éditer, user peut éditer ses tâches
+                if ($this->security->isGranted('ROLE_ADMIN')) {
+                    
+                    return true;
+                }
+                return $task->getAuthor() === $user;
+
+            case 'TASK_DELETE':
+                // Pour la suppression : seul le propriétaire peut supprimer
+                return $task->getAuthor() === $user;
         }
 
-        // L'utilisateur ne peut éditer que ses propres tâches
-        return $task->getAuthor() === $user;
+        return false;
     }
 }

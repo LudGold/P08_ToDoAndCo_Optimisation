@@ -38,7 +38,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('input[name="_password"]');
     }
 
-    
+
     public function testLogoutRedirection()
     {
         // Accéder à /logout
