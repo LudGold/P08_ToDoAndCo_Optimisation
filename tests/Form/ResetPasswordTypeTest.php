@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\tests\Form;
 
 use App\Form\ResetPasswordType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -18,7 +18,7 @@ class ResetPasswordTypeTest extends KernelTestCase
         // Récupérer le form factory
         $this->formFactory = static::getContainer()->get(FormFactoryInterface::class);
     }
-// testons les contraintes
+    // testons les contraintes
     public function testSubmitEmptyPassword()
     {
         $formData = [

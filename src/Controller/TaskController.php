@@ -98,19 +98,19 @@ class TaskController extends AbstractController
         $this->addFlash('success', $message);
         return $this->redirectToRoute('task_list');
     }
-
-    #[Route('/tasks/{id}/delete', name: 'task_delete', methods: ['DELETE', 'POST'])]
+    #[Route('/tasks/{id}/delete', name: 'task_delete', methods: ['POST'])]
     public function deleteTask(Task $task, Request $request): Response
     {
-        // $this->denyAccessUnlessGranted('TASK_DELETE', $task);
+        $this->denyAccessUnlessGranted('TASK_DELETE', $task);
 
-        if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($task);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'La tâche a bien été supprimée.');
-        } else {
+        if (!$this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Le token CSRF est invalide.');
+            return $this->redirectToRoute('task_list');
         }
+
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'La tâche a bien été supprimée.');
 
         return $this->redirectToRoute('task_list');
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ests\Controller;
+namespace App\tests\Controller;
 
 use App\DataFixtures\Test\AppTestFixtures;
 use App\Entity\User;
@@ -70,14 +70,14 @@ class UserControllerTest extends WebTestCase
             'user[password][first]' => 'Password123!',
             'user[password][second]' => 'Password123!'
         ]);
-        
+
         $this->client->submit($form);
 
         $this->assertResponseRedirects('/');
         $this->client->followRedirect();
 
         // Correction du message flash attendu
-        $this->assertSelectorExists('.alert-success');
+
         $this->assertSelectorTextContains('.alert-success', 'Votre compte a été créé avec succès');
 
         $user = $this->userRepository->findOneBy(['username' => 'TestUser']);

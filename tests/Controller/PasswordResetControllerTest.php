@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\tests\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -140,49 +140,49 @@ class PasswordResetControllerTest extends WebTestCase
         $client = static::createClient();
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
-    
+
         // Créer un utilisateur test avec des identifiants uniques
         $uniqueEmail = 'test_' . uniqid() . '@example.com';
         $user = new User();
         $user->setUsername('testuser_' . uniqid());
         $user->setEmail($uniqueEmail);
-        
+
         // Définir un token de réinitialisation valide
         $validToken = 'valid-token-' . uniqid();
         $user->setResetToken($validToken);
         $user->setTokenExpiryDate(new \DateTime('+1 hour'));
-        
+
         // Définir le mot de passe initial
         $user->setPassword($passwordHasher->hashPassword($user, 'OldPassword123!'));
-        
+
         $entityManager->persist($user);
         $entityManager->flush();
-        
+
         // Sauvegarder le mot de passe initial
         $initialPassword = $user->getPassword();
-    
+
         // Faire la requête de réinitialisation
         $crawler = $client->request('GET', '/reset-password/' . $validToken);
-        
+
         // Soumettre le nouveau mot de passe
         $form = $crawler->selectButton('Réinitialiser mon mot de passe')->form([
             'reset_password[plainPassword]' => 'NewSecurePassword123!'
         ]);
-        
+
         $client->submit($form);
-    
+
         // Vérifier la redirection vers login
         $this->assertResponseRedirects('/login');
-    
+
         // Important : vider l'EntityManager pour forcer le rechargement depuis la base
         $entityManager->clear();
-        
+
         // Recharger l'utilisateur
         $updatedUser = $entityManager->getRepository(User::class)->find($user->getId());
-        
+
         // Verifier que le token a été réinitialisé
         $this->assertNull($updatedUser->getResetToken());
-        
+
         // Vérifier que le nouveau mot de passe fonctionne
         $this->assertTrue($passwordHasher->isPasswordValid(
             $updatedUser,

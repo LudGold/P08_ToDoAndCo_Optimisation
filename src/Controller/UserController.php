@@ -118,7 +118,7 @@ class UserController extends AbstractController
             ]);
 
             $this->addFlash('success', 'Le profil a été modifié avec succès.');
-            
+
             return $this->redirectToRoute(
                 $isAdmin ? 'admin_user_list' : 'app_homepage'
             );
