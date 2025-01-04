@@ -10,7 +10,9 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskVoter extends Voter
 {
-    public function __construct(private Security $security) {}
+    public function __construct(private Security $security)
+    {
+    }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -32,9 +34,9 @@ class TaskVoter extends Voter
             case 'TASK_EDIT':
                 // Pour l'édition : admin peut tout éditer, user peut éditer ses tâches
                 if ($this->security->isGranted('ROLE_ADMIN')) {
-                    
                     return true;
                 }
+
                 return $task->getAuthor() === $user;
 
             case 'TASK_DELETE':

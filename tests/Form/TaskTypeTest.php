@@ -11,8 +11,11 @@ use Symfony\Component\Form\FormFactoryInterface;
 class TaskTypeTest extends KernelTestCase
 {
     private $task;
+
     private $user;
+
     private $entityManager;
+
     private $formFactory;
 
     protected function setUp(): void
@@ -53,9 +56,9 @@ class TaskTypeTest extends KernelTestCase
     public function testSubmitValidData()
     {
         $formData = [
-            'title' => 'Tâche de test',
+            'title'   => 'Tâche de test',
             'content' => 'Contenu de la tâche de test',
-            'author' => $this->user->getId(), // Important : utiliser l'ID pour EntityType
+            'author'  => $this->user->getId(), // Important : utiliser l'ID pour EntityType
         ];
 
         $form = $this->formFactory->create(TaskType::class, $this->task);
@@ -76,7 +79,7 @@ class TaskTypeTest extends KernelTestCase
         $this->assertTrue($form->has('author'));
 
         // Vérification des options des champs
-        $titleConfig = $form->get('title')->getConfig();
+        $titleConfig   = $form->get('title')->getConfig();
         $contentConfig = $form->get('content')->getConfig();
 
         $this->assertEquals('wide-title, form-control', $titleConfig->getOption('attr')['class']);

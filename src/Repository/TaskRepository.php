@@ -18,8 +18,6 @@ class TaskRepository extends ServiceEntityRepository
 {
     /**
      * Constructeur de TaskRepository.
-     *
-     * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
@@ -28,30 +26,24 @@ class TaskRepository extends ServiceEntityRepository
 
     /**
      * Ajoute une tâche à la base de données.
-     *
-     * @param Task $entity
-     * @param bool $flush
      */
     public function add(Task $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
-        if ($flush === true) {
+        if (true === $flush) {
             $this->getEntityManager()->flush();
         }
     }
 
     /**
      * Supprime une tâche de la base de données.
-     *
-     * @param Task $entity
-     * @param bool $flush
      */
     public function remove(Task $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
-        if ($flush === true) {
+        if (true === $flush) {
             $this->getEntityManager()->flush();
         }
     }

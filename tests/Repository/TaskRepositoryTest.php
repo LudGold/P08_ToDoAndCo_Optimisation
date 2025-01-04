@@ -9,8 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class TaskRepositoryTest extends KernelTestCase
 {
     private $entityManager;
+
     private $taskRepository;
+
     private $user;
+
     private $tasksToClean = [];  // Pour garder trace des tâches à nettoyer
 
     protected function setUp(): void
@@ -27,7 +30,7 @@ class TaskRepositoryTest extends KernelTestCase
         $this->user = new User();
         $this->user->setUsername('testUser');
         $this->user->setPassword('password123');
-        $this->user->setEmail('test'.uniqid().'@test.com');
+        $this->user->setEmail('test' . uniqid() . '@test.com');
 
         $this->entityManager->persist($this->user);
         $this->entityManager->flush();

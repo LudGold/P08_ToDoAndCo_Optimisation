@@ -5,14 +5,17 @@ namespace App\tests\Form;
 use App\Entity\User;
 use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class UserTypeTest extends KernelTestCase
 {
     private $user;
+
     private $entityManager;
+
     private $formFactory;
+
     private $security;
 
     protected function setUp(): void
@@ -55,16 +58,16 @@ class UserTypeTest extends KernelTestCase
     {
         $formData = [
             'username' => 'newUser',
-            'email' => 'newuser@example.com',
+            'email'    => 'newuser@example.com',
             'password' => [
-                'first' => 'newpassword',
+                'first'  => 'newpassword',
                 'second' => 'newpassword',
             ],
         ];
 
         $form = $this->formFactory->create(UserType::class, $this->user, [
-            'is_edit' => false,
-            'is_admin' => false,
+            'is_edit'      => false,
+            'is_admin'     => false,
             'is_self_edit' => false,
         ]);
         $form->submit($formData);
@@ -78,8 +81,8 @@ class UserTypeTest extends KernelTestCase
     public function testFormFields()
     {
         $form = $this->formFactory->create(UserType::class, $this->user, [
-            'is_edit' => false,
-            'is_admin' => false,
+            'is_edit'      => false,
+            'is_admin'     => false,
             'is_self_edit' => false,
         ]);
 
@@ -89,7 +92,7 @@ class UserTypeTest extends KernelTestCase
 
         // Vérification des options des champs
         $usernameConfig = $form->get('username')->getConfig();
-        $emailConfig = $form->get('email')->getConfig();
+        $emailConfig    = $form->get('email')->getConfig();
         $passwordConfig = $form->get('password')->getConfig();
 
         $this->assertEquals('form-control', $usernameConfig->getOption('attr')['class']);
@@ -101,8 +104,8 @@ class UserTypeTest extends KernelTestCase
     public function testEditMode(): void
     {
         $form = $this->formFactory->create(UserType::class, $this->user, [
-            'is_edit' => true,
-            'is_admin' => false,
+            'is_edit'      => true,
+            'is_admin'     => false,
             'is_self_edit' => false,
         ]);
 
@@ -118,8 +121,8 @@ class UserTypeTest extends KernelTestCase
     public function testAdminMode(): void
     {
         $form = $this->formFactory->create(UserType::class, $this->user, [
-            'is_edit' => true,
-            'is_admin' => true,
+            'is_edit'      => true,
+            'is_admin'     => true,
             'is_self_edit' => false,
         ]);
 
@@ -133,6 +136,7 @@ class UserTypeTest extends KernelTestCase
         $rolesField = $form->get('roles');
         $this->assertFalse($rolesField->getConfig()->getDisabled(), 'Le champ roles devrait être actif pour un admin');
     }
+
     public function testDefaultOptions()
     {
         $form = $this->formFactory->create(UserType::class, $this->user);

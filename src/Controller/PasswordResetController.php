@@ -5,17 +5,16 @@ namespace App\Controller;
 use App\Form\PasswordResetRequestType;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
+use Symfony\Component\Routing\Annotation\Route;
 
 class PasswordResetController extends AbstractController
 {
-    #[Route("/forgot-password", name: "app_forgot_password")]
+    #[Route('/forgot-password', name: 'app_forgot_password')]
     public function forgotPassword(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PasswordResetRequestType::class);
@@ -44,17 +43,17 @@ class PasswordResetController extends AbstractController
         ]);
     }
 
-    #[Route("/reset-password/{token}", name: "app_reset_password")]
+    #[Route('/reset-password/{token}', name: 'app_reset_password')]
     public function resetPassword(
         Request $request,
         UserRepository $userRepository,
         string $token,
         EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher // Ajout du service pour le hashage
+        UserPasswordHasherInterface $passwordHasher, // Ajout du service pour le hashage
     ): Response {
         $user = $userRepository->findOneBy(['resetToken' => $token]);
 
-        if (!$user || $user->isTokenExpired() === true) {
+        if (!$user || true === $user->isTokenExpired()) {
             $this->addFlash('danger', 'Le jeton de réinitialisation est invalide ou expiré.');
 
             return $this->redirectToRoute('app_forgot_password');

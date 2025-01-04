@@ -69,7 +69,7 @@ class TaskTest extends TestCase
     public function testSetCreatedAt()
     {
         $task = new Task();
-        $now = new \DateTime();
+        $now  = new \DateTime();
 
         // Définir une date de création
         $task->setCreatedAt($now);

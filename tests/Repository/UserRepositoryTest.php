@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class UserRepositoryTest extends KernelTestCase
 {
     private $entityManager;
+
     private $repository;
 
     protected function setUp(): void
@@ -16,7 +17,7 @@ class UserRepositoryTest extends KernelTestCase
         self::bootKernel();
 
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $this->repository = $this->entityManager->getRepository(User::class);
+        $this->repository    = $this->entityManager->getRepository(User::class);
 
         // Supprimer l'utilisateur `test@test.com` s'il existe déjà
         $existingUser = $this->repository->findOneBy(['email' => 'test@test.com']);

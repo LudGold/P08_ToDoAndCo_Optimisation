@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,8 +16,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
 {
     private $taskRepository;
+
     private $entityManager;
+
     private $input;
+
     private $output;
 
     protected function setUp(): void
@@ -26,9 +28,9 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
         self::bootKernel();
 
         $this->taskRepository = $this->createMock(TaskRepository::class);
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->input = $this->createMock(InputInterface::class);
-        $this->output = $this->createMock(OutputInterface::class);
+        $this->entityManager  = $this->createMock(EntityManagerInterface::class);
+        $this->input          = $this->createMock(InputInterface::class);
+        $this->output         = $this->createMock(OutputInterface::class);
     }
 
     public function testConstruct(): void
@@ -62,7 +64,7 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
                 }
             });
 
-        $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
+        $command       = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
         $commandTester = new CommandTester($command);
 
         // Exécution de la commande
@@ -106,7 +108,7 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
             ->expects($this->once())
             ->method('flush');
 
-        $command = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
+        $command       = new AssignAnonymousUserToTaskCommand($this->taskRepository, $this->entityManager);
         $commandTester = new CommandTester($command);
 
         // Exécution de la commande

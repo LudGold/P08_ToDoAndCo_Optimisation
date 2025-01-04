@@ -13,7 +13,7 @@ use Faker\Factory;
  */
 class TaskFixtures extends Fixture
 {
-    public function load(ObjectManager $manager):void
+    public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
 
