@@ -4,7 +4,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 // Chargez l'autoloader
-$loaderPath = __DIR__.'/../app/autoload.php';
+$loaderPath = __DIR__ . '/../app/autoload.php';
 if (!is_file($loaderPath)) {
     throw new RuntimeException('The autoload file is missing.');
 }
@@ -15,7 +15,7 @@ $request = Request::createFromGlobals();
 
 // Vérifiez les adresses IP autorisées
 $allowedIps = ['127.0.0.1', '::1'];
-$clientIp = $request->getClientIp();
+$clientIp   = $request->getClientIp();
 
 if (
     $request->server->has('HTTP_CLIENT_IP')

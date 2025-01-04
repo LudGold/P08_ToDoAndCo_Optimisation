@@ -14,16 +14,16 @@ class PasswordResetRequestType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Nom d\'utilisateur',
+                'label'       => 'Nom d\'utilisateur',
                 'constraints' => [
-            new NotBlank([
-                'message' => 'Ce champ est obligatoire.',
-            ]),
-        ],
-        'attr' => [
-            'placeholder' => 'Entrez votre nom d\'utilisateur', // Placeholder pour guider l'utilisateur
-        ],
-    ]);
+                    new NotBlank([
+                        'message' => 'Ce champ est obligatoire.',
+                    ]),
+                ],
+                'attr' => [
+                    'placeholder' => 'Entrez votre nom d\'utilisateur', // Placeholder pour guider l'utilisateur
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

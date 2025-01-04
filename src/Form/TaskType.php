@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TaskType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) :void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', TextType::class, [
@@ -21,24 +21,22 @@ class TaskType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'attr' => ['class' => 'wide-textarea, form-control'],
-            ])
-
-        ;
+            ]);
         // Si c'est en mode édition, on n'ajoute pas le champ 'author'
         if (!$options['is_edit']) {
             $builder->add('author', EntityType::class, [
-                'class' => User::class,
+                'class'        => User::class,
                 'choice_label' => 'username',
-                'label' => 'Auteur',
+                'label'        => 'Auteur',
             ]);
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver):void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
-            'is_edit' => false,  // Par défaut, on considère que ce n'est pas une édition
+            'is_edit'    => false,  // Par défaut, on considère que ce n'est pas une édition
         ]);
     }
 }

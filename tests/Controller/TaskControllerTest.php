@@ -5,11 +5,11 @@ namespace App\tests\Controller;
 use App\Entity\Task;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 class TaskControllerTest extends WebTestCase
 {
     private $client;
+
     private $entityManager;
 
     protected function setUp(): void
@@ -72,7 +72,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('form[name="task"]');
 
         $form = $crawler->selectButton('Créer')->form([
-            'task[title]' => 'Test Task',
+            'task[title]'   => 'Test Task',
             'task[content]' => 'Content of the test task',
         ]);
         $this->client->submit($form);
@@ -96,7 +96,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(200);
 
         $form = $crawler->selectButton('Modifier')->form([
-            'task[title]' => 'Updated Task Title',
+            'task[title]'   => 'Updated Task Title',
             'task[content]' => 'Updated content',
         ]);
         $this->client->submit($form);
@@ -122,7 +122,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirects(false);
 
         // Configuration du token CSRF
-        $tokenValue = 'valid_token';
+        $tokenValue       = 'valid_token';
         $csrfTokenManager = $this->getMockBuilder(\Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class)
             ->getMock();
         $csrfTokenManager->method('getToken')
@@ -164,7 +164,7 @@ class TaskControllerTest extends WebTestCase
         $stmt = $this->entityManager->getConnection()
             ->prepare('SELECT COUNT(*) as count FROM task WHERE id = :id');
         $result = $stmt->executeQuery(['id' => $taskId]);
-        $count = $result->fetchOne();
+        $count  = $result->fetchOne();
 
         $this->assertEquals(0, $count, 'La tâche devrait être supprimée de la base de données');
     }

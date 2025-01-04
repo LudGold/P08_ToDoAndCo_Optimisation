@@ -15,6 +15,7 @@ class UserVoterTest extends TestCase
     private $authChecker;
 
     private $voter;
+
     private $token;
 
     protected function setUp(): void

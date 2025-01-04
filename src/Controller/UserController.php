@@ -8,10 +8,10 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -20,8 +20,9 @@ class UserController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
-        private readonly LoggerInterface $logger
-    ) {}
+        private readonly LoggerInterface $logger,
+    ) {
+    }
 
     #[Route('/admin/users', name: 'admin_user_list', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour accéder à cette page')]
@@ -37,16 +38,16 @@ class UserController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user, [
-            'is_edit' => false,
-            'is_admin' => $this->isGranted('ROLE_ADMIN'),
-            'is_self_edit' => false
+            'is_edit'      => false,
+            'is_admin'     => $this->isGranted('ROLE_ADMIN'),
+            'is_self_edit' => false,
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Hashage du mot de passe
-            $plainPassword = $form->get('password')->getData();
+            $plainPassword  = $form->get('password')->getData();
             $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
 
@@ -57,12 +58,13 @@ class UserController extends AbstractController
             $this->entityManager->flush();
 
             $this->logger->info('Un utilisateur a été créé', [
-                'user_id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'created_by' => $this->security->getUser()?->getUserIdentifier()
+                'user_id'    => $user->getId(),
+                'username'   => $user->getUsername(),
+                'created_by' => $this->security->getUser()?->getUserIdentifier(),
             ]);
 
             $this->addFlash('success', 'Votre compte a été créé avec succès.');
+
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -75,21 +77,21 @@ class UserController extends AbstractController
     public function editUser(
         User $user,
         Request $request,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): Response {
         /** @var User|null $currentUser */
         $currentUser = $this->getUser();
-        $isSelfEdit = $currentUser && $currentUser->getId() === $user->getId();
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $isSelfEdit  = $currentUser && $currentUser->getId() === $user->getId();
+        $isAdmin     = $this->isGranted('ROLE_ADMIN');
 
         if (!$isAdmin && !$isSelfEdit) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas modifier ce profil.');
         }
 
         $form = $this->createForm(UserType::class, $user, [
-            'is_edit' => true,
-            'is_admin' => $isAdmin,
-            'is_self_edit' => $isSelfEdit
+            'is_edit'      => true,
+            'is_admin'     => $isAdmin,
+            'is_self_edit' => $isSelfEdit,
         ]);
 
         $form->handleRequest($request);
@@ -112,9 +114,9 @@ class UserController extends AbstractController
             $this->entityManager->flush();
 
             $this->logger->info('Un utilisateur a été modifié', [
-                'user_id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'modified_by' => $this->security->getUser()?->getUserIdentifier()
+                'user_id'     => $user->getId(),
+                'username'    => $user->getUsername(),
+                'modified_by' => $this->security->getUser()?->getUserIdentifier(),
             ]);
 
             $this->addFlash('success', 'Le profil a été modifié avec succès.');
@@ -126,7 +128,7 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
-            'user' => $user
+            'user' => $user,
         ]);
     }
 }

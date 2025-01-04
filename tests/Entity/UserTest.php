@@ -61,7 +61,7 @@ class UserTest extends TestCase
         $user->setPassword('Password123!');
         $user->setEmail('test@example.com');
 
-        $validator = Validation::createValidator();
+        $validator  = Validation::createValidator();
         $violations = $validator->validate($user);
 
         $this->assertCount(0, $violations);

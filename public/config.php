@@ -9,7 +9,7 @@ $autoloadPath = realpath(__DIR__ . '/../vendor/autoload.php');
 if ($autoloadPath && is_readable($autoloadPath)) {
     require_once $autoloadPath;
 } else {
-    throw new \RuntimeException('Autoload file not found or not readable');
+    throw new RuntimeException('Autoload file not found or not readable');
 }
 
 $dotenv = new Dotenv();
@@ -31,7 +31,7 @@ if (!$request->server->has('HTTP_HOST')) {
 
 // Vérifiez l'adresse IP de l'utilisateur
 $allowedIps = ['127.0.0.1', '::1'];
-$clientIp = $request->getClientIp();
+$clientIp   = $request->getClientIp();
 if ($clientIp && !in_array($clientIp, $allowedIps)) {
     $response = new Response(
         'This script is only accessible from localhost.',
@@ -59,12 +59,12 @@ if (is_readable($requirementsPath)) {
 // Préparez les problèmes (exemple simulé ici, remplacez avec votre logique réelle)
 $problems = [
     (object) [
-        'getTestMessage' => fn() => 'Test message 1',
-        'getHelpHtml' => fn() => 'Help message 1',
+        'getTestMessage' => fn () => 'Test message 1',
+        'getHelpHtml'    => fn () => 'Help message 1',
     ],
     (object) [
-        'getTestMessage' => fn() => 'Test message 2',
-        'getHelpHtml' => fn() => 'Help message 2',
+        'getTestMessage' => fn () => 'Test message 2',
+        'getHelpHtml'    => fn () => 'Help message 2',
     ],
 ];
 

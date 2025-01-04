@@ -18,8 +18,6 @@ class UserRepository extends ServiceEntityRepository
 {
     /**
      * Constructeur de UserRepository.
-     *
-     * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
@@ -28,30 +26,24 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * Ajoute un utilisateur à la base de données.
-     *
-     * @param User $entity
-     * @param bool $flush
      */
     public function add(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
-        if ($flush === true) {
+        if (true === $flush) {
             $this->getEntityManager()->flush();
         }
     }
 
     /**
      * Supprime un utilisateur de la base de données.
-     *
-     * @param User $entity
-     * @param bool $flush
      */
     public function remove(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
-        if ($flush === true) {
+        if (true === $flush) {
             $this->getEntityManager()->flush();
         }
     }

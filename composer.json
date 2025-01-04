@@ -30,7 +30,7 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.0",
         "fakerphp/faker": "^1.23",
-        "friendsofphp/php-cs-fixer": "^3.64",
+        "friendsofphp/php-cs-fixer": "^3.66",
         "liip/test-fixtures-bundle": "^3.2",
         "phpunit/phpunit": "9.5",
         "symfony/browser-kit": "6.4.*",

@@ -4,12 +4,11 @@ namespace App\tests\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase; // Pour manipuler l'EntityManager
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface; // Pour manipuler l'EntityManager
 
 class PasswordResetControllerTest extends WebTestCase
 {
-
     public function testForgotPasswordRouteIsAccessible()
     {
         $client = static::createClient();
@@ -27,9 +26,9 @@ class PasswordResetControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Récupérer les services nécessaires
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $entityManager  = static::getContainer()->get(EntityManagerInterface::class);
         $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
-        $email = 'testuser_' . uniqid() . '@example.com';
+        $email          = 'testuser_' . uniqid() . '@example.com';
         // Créer un utilisateur avec un token valide
         $user = new User();
         $user->setUsername('testuser');
@@ -76,7 +75,7 @@ class PasswordResetControllerTest extends WebTestCase
         $client = static::createClient();
 
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $email = 'testuser_' . uniqid() . '@example.com';
+        $email         = 'testuser_' . uniqid() . '@example.com';
 
         // Créer un utilisateur avec un token valide
         $user = new User();
@@ -93,13 +92,14 @@ class PasswordResetControllerTest extends WebTestCase
 
         // Vérifier que le bon template est affiché
         $this->assertSelectorTextContains('button', 'Réinitialiser mon mot de passe');
-        //Changez selon le contenu réel du template
+        // Changez selon le contenu réel du template
         $this->assertSelectorExists('form[name="reset_password"]');
     }
-    // test pour un formulaire invalide 
+
+    // test pour un formulaire invalide
     public function testForgotPasswordWithInvalidForm()
     {
-        $client = static::createClient();
+        $client  = static::createClient();
         $crawler = $client->request('GET', '/forgot-password');
 
         $form = $crawler->selectButton('Envoyer')->form([
@@ -107,16 +107,16 @@ class PasswordResetControllerTest extends WebTestCase
         ]);
         $client->submit($form);
 
-
         $this->assertResponseIsSuccessful();
     }
+
     public function testResetPasswordWithExpiredToken()
     {
         $client = static::createClient();
 
         // Créer un utilisateur avec un token expiré
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $email = 'expired_' . uniqid() . '@example.com'; // Email unique
+        $email         = 'expired_' . uniqid() . '@example.com'; // Email unique
 
         $user = new User();
         $user->setUsername('expireduser_' . uniqid()); // Username unique aussi
@@ -135,15 +135,16 @@ class PasswordResetControllerTest extends WebTestCase
         $client->followRedirect();
         $this->assertSelectorTextContains('.alert-danger', 'Le jeton de réinitialisation est invalide ou expiré.');
     }
+
     public function testResetPasswordWithValidForm(): void
     {
-        $client = static::createClient();
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $client         = static::createClient();
+        $entityManager  = static::getContainer()->get(EntityManagerInterface::class);
         $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
         // Créer un utilisateur test avec des identifiants uniques
         $uniqueEmail = 'test_' . uniqid() . '@example.com';
-        $user = new User();
+        $user        = new User();
         $user->setUsername('testuser_' . uniqid());
         $user->setEmail($uniqueEmail);
 
@@ -166,7 +167,7 @@ class PasswordResetControllerTest extends WebTestCase
 
         // Soumettre le nouveau mot de passe
         $form = $crawler->selectButton('Réinitialiser mon mot de passe')->form([
-            'reset_password[plainPassword]' => 'NewSecurePassword123!'
+            'reset_password[plainPassword]' => 'NewSecurePassword123!',
         ]);
 
         $client->submit($form);

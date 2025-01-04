@@ -1,6 +1,6 @@
 <?php
 
-$preloadFile = __DIR__.'/../var/cache/prod/App_KernelProdContainer.preload.php';
+$preloadFile = __DIR__ . '/../var/cache/prod/App_KernelProdContainer.preload.php';
 
 // Vérifiez si le fichier existe avant de le charger.
 if (is_file($preloadFile)) {

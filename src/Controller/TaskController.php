@@ -11,22 +11,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class TaskController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
-    ) {}
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     #[Route('/tasks', name: 'task_list', methods: ['GET'])]
     public function listTasks(): Response
     {
-        $user = $this->getUser();
+        $user  = $this->getUser();
         $tasks = [];
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $anonymousUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
-            $tasks = $this->entityManager->getRepository(Task::class)->createQueryBuilder('t')
+            $tasks         = $this->entityManager->getRepository(Task::class)->createQueryBuilder('t')
                 ->where('t.author = :user OR t.author = :anonymous')
                 ->setParameter('user', $user)
                 ->setParameter('anonymous', $anonymousUser)
@@ -57,6 +57,7 @@ class TaskController extends AbstractController
             $this->entityManager->flush();
 
             $this->addFlash('success', 'La tâche a été ajoutée avec succès.');
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -74,6 +75,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
             $this->addFlash('success', 'La tâche a bien été modifiée.');
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -96,8 +98,10 @@ class TaskController extends AbstractController
             : sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle());
 
         $this->addFlash('success', $message);
+
         return $this->redirectToRoute('task_list');
     }
+
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: ['POST'])]
     public function deleteTask(Task $task, Request $request): Response
     {
@@ -105,6 +109,7 @@ class TaskController extends AbstractController
 
         if (!$this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Le token CSRF est invalide.');
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -125,7 +130,7 @@ class TaskController extends AbstractController
 
         return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
-            'title' => 'Tâches à faire'
+            'title' => 'Tâches à faire',
         ]);
     }
 
@@ -139,7 +144,7 @@ class TaskController extends AbstractController
 
         return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
-            'title' => 'Tâches terminées'
+            'title' => 'Tâches terminées',
         ]);
     }
 }

@@ -18,13 +18,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class AssignAnonymousUserToTaskCommand extends Command
 {
     private $taskRepository;
+
     private $entityManager;
 
     public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->taskRepository = $taskRepository;
-        $this->entityManager = $entityManager;
+        $this->entityManager  = $entityManager;
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

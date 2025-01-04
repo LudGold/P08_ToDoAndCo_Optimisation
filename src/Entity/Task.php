@@ -10,22 +10,22 @@ class Task
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: "text")]
+    #[ORM\Column(type: 'text')]
     private ?string $content = null;
 
-    #[ORM\Column(type: "boolean")]
+    #[ORM\Column(type: 'boolean')]
     private bool $isDone = false;
 
-    #[ORM\ManyToOne(targetEntity: "App\Entity\User", inversedBy: "tasks")]
+    #[ORM\ManyToOne(targetEntity: "App\Entity\User", inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 

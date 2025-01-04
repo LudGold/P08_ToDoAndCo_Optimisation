@@ -34,7 +34,7 @@ class DataFixtureTestCase extends WebTestCase
         self::runCommand('doctrine:fixtures:load --no-interaction --env=test --group=test');
 
         // Création d'un client de test et récupération du container
-        $this->client = static::createClient();
+        $this->client        = static::createClient();
         $this->containerTest = $this->client->getContainer();
         $this->entityManager = $this->containerTest->get('doctrine.orm.entity_manager');
     }
@@ -55,7 +55,7 @@ class DataFixtureTestCase extends WebTestCase
     protected static function getApplication()
     {
         if (null === self::$application) {
-            $kernel = static::createKernel();
+            $kernel            = static::createKernel();
             self::$application = new Application($kernel);
             self::$application->setAutoExit(false);
         }

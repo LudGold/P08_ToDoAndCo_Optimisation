@@ -18,6 +18,7 @@ class ResetPasswordTypeTest extends KernelTestCase
         // Récupérer le form factory
         $this->formFactory = static::getContainer()->get(FormFactoryInterface::class);
     }
+
     // testons les contraintes
     public function testSubmitEmptyPassword()
     {

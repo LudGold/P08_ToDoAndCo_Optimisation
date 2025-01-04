@@ -11,15 +11,17 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserControllerTest extends WebTestCase
 {
     private $client;
+
     private $entityManager;
+
     private $userRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = static::createClient();
-        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $this->client         = static::createClient();
+        $this->entityManager  = static::getContainer()->get(EntityManagerInterface::class);
         $this->userRepository = $this->entityManager->getRepository(User::class);
 
         // Récupérer le service UserPasswordHasherInterface depuis le conteneur
@@ -65,10 +67,10 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorExists('form[name="user"]');
 
         $form = $crawler->selectButton('Créer')->form([
-            'user[username]' => 'TestUser',
-            'user[email]' => 'test@example.com',
-            'user[password][first]' => 'Password123!',
-            'user[password][second]' => 'Password123!'
+            'user[username]'         => 'TestUser',
+            'user[email]'            => 'test@example.com',
+            'user[password][first]'  => 'Password123!',
+            'user[password][second]' => 'Password123!',
         ]);
 
         $this->client->submit($form);
@@ -119,7 +121,7 @@ class UserControllerTest extends WebTestCase
         // Correction des données du formulaire
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'UpdatedUsername', // Nouveau username
-            'user[email]' => 'newemail@example.com',
+            'user[email]'    => 'newemail@example.com',
             // Ne pas inclure le mot de passe si on ne veut pas le modifier
         ]);
 
