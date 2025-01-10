@@ -56,7 +56,7 @@ class AssignAnonymousUserToTaskCommandTest extends KernelTestCase
     {
         // Mock du repository pour retourner null pour l'utilisateur "anonyme"
         $this->entityManager->method('getRepository')
-            ->willReturnCallback(function ($entityClass) {
+            ->willReturnCallback(function($entityClass) {
                 if (User::class === $entityClass) {
                     return $this->createConfiguredMock(TaskRepository::class, [
                         'findOneBy' => null,

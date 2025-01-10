@@ -59,5 +59,9 @@ return (new PhpCsFixer\Config())
         'no_blank_lines_after_phpdoc' => true,  // Supprimer les lignes vides après un PHPDoc
         'function_declaration' => ['closure_function_spacing' => 'none'],  // Gestion des espaces dans les déclarations de fonction
     ])
+<<<<<<< HEAD
     ->setFinder($finder);
 
+=======
+    ->setFinder($finder);
+>>>>>>> 35c0db9 (last correction on comments and uml)

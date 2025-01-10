@@ -7,8 +7,14 @@ use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
+/**
+ * Classe de test pour l'entité User.
+ */
 class UserTest extends TestCase
 {
+    /**
+     * Teste les getters et setters de l'entité User.
+     */
     public function testGettersAndSetters()
     {
         $user = new User();
@@ -33,12 +39,18 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getTokenExpiryDate());
     }
 
+    /**
+     * Teste le rôle par défaut de l'entité User.
+     */
     public function testDefaultRole()
     {
         $user = new User();
         $this->assertContains('ROLE_USER', $user->getRoles());
     }
 
+    /**
+     * Teste la méthode isTokenExpired() de l'entité User.
+     */
     public function testIsTokenExpired()
     {
         $user = new User();
@@ -54,6 +66,9 @@ class UserTest extends TestCase
         $this->assertTrue($user->isTokenExpired());
     }
 
+    /**
+     * Teste la validation des contraintes de l'entité User.
+     */
     public function testValidation()
     {
         $user = new User();
@@ -67,12 +82,18 @@ class UserTest extends TestCase
         $this->assertCount(0, $violations);
     }
 
+    /**
+     * Teste la méthode eraseCredentials() de l'entité User.
+     */
     public function testEraseCredentials()
     {
         $user = new User();
         $this->assertNull($user->eraseCredentials());
     }
 
+    /**
+     * Teste la méthode getTasks() de l'entité User.
+     */
     public function testGetTasks()
     {
         $user = new User();
@@ -80,6 +101,9 @@ class UserTest extends TestCase
         $this->assertCount(0, $user->getTasks());
     }
 
+    /**
+     * Teste la méthode addTask() de l'entité User.
+     */
     public function testAddTask()
     {
         $user = new User();

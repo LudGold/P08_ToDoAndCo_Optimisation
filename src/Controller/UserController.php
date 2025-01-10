@@ -36,6 +36,11 @@ class UserController extends AbstractController
     #[Route('/users/create', name: 'app_user_create', methods: ['GET', 'POST'])]
     public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
+        // Vérifier si l'utilisateur est déjà connecté
+    if ($this->getUser()) {
+        $this->addFlash('error', 'Vous êtes déjà connecté(e) et ne pouvez pas créer un nouvel utilisateur.');
+        return $this->redirectToRoute('app_homepage');
+    }
         $user = new User();
         $form = $this->createForm(UserType::class, $user, [
             'is_edit'      => false,
