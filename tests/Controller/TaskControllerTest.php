@@ -40,17 +40,6 @@ class TaskControllerTest extends WebTestCase
         $session->start();
     }
 
-    private function mockCsrfToken(string $tokenId, string $tokenValue): void
-    {
-        $csrfTokenManager = $this->getMockBuilder(\Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class)
-            ->getMock();
-
-        $csrfTokenManager->method('getToken')
-            ->willReturn(new \Symfony\Component\Security\Csrf\CsrfToken($tokenId, $tokenValue));
-
-        $this->client->getContainer()->set('security.csrf.token_manager', $csrfTokenManager);
-    }
-
     private function getRepository(string $class)
     {
         return $this->entityManager->getRepository($class);

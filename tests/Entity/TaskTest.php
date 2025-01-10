@@ -6,8 +6,14 @@ use App\Entity\Task;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Classe de test pour l'entité Task.
+ */
 class TaskTest extends TestCase
 {
+    /**
+     * Teste la méthode setTitle() de l'entité Task.
+     */
     public function testSetTitle()
     {
         $task = new Task();
@@ -16,6 +22,9 @@ class TaskTest extends TestCase
         $this->assertSame('Test Task Title', $task->getTitle());
     }
 
+    /**
+     * Teste la méthode setContent() de l'entité Task.
+     */
     public function testSetContent()
     {
         $task = new Task();
@@ -24,6 +33,9 @@ class TaskTest extends TestCase
         $this->assertSame('This is the content of the task.', $task->getContent());
     }
 
+    /**
+     * Teste le comportement par défaut et la méthode setIsDone() de l'entité Task.
+     */
     public function testIsDone()
     {
         $task = new Task();
@@ -40,6 +52,9 @@ class TaskTest extends TestCase
         $this->assertFalse($task->isDone());
     }
 
+    /**
+     * Teste la méthode toggle() de l'entité Task.
+     */
     public function testToggle()
     {
         $task = new Task();
@@ -53,6 +68,9 @@ class TaskTest extends TestCase
         $this->assertFalse($task->isDone());
     }
 
+    /**
+     * Teste la méthode setAuthor() de l'entité Task.
+     */
     public function testSetAuthor()
     {
         $task = new Task();
@@ -66,6 +84,9 @@ class TaskTest extends TestCase
         $this->assertSame('JohnDoe', $task->getAuthor()->getUsername());
     }
 
+    /**
+     * Teste la méthode setCreatedAt() de l'entité Task.
+     */
     public function testSetCreatedAt()
     {
         $task = new Task();
