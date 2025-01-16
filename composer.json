@@ -59,15 +59,16 @@
         "sort-packages": true
     },
     "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
+    "psr-4": {
+        "App\\": "src/"
+    }
+},
     "autoload-dev": {
-        "psr-4": {
-            "App\\Tests\\": "tests/"
-        }
-    },
+    "psr-4": {
+        "App\\Tests\\": "tests/",
+        "App\\DataFixtures\\Test\\": "src/DataFixtures/Test/"
+    }
+},
     "replace": {
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",

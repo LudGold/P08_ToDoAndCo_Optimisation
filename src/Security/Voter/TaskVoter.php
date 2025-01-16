@@ -36,10 +36,12 @@ class TaskVoter extends Voter
                 if ($this->security->isGranted('ROLE_ADMIN')) {
                     return true;
                 }
-
                 return $task->getAuthor() === $user;
 
             case 'TASK_DELETE':
+                if ($this->security->isGranted('ROLE_ADMIN')) {
+                    return true;
+                }
                 // Pour la suppression : seul le propriétaire peut supprimer
                 return $task->getAuthor() === $user;
         }
